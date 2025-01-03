@@ -16,7 +16,6 @@ namespace QBittorrent.CommandLineInterface.Commands
             _formatter = new ListFormatter<T>(PrintTable, PrintList);
         }
 
-        [Option("-F|--format <LIST_FORMAT>", "Output format: table|list|csv|json", CommandOptionType.SingleValue)]
         public virtual string Format { get; set; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

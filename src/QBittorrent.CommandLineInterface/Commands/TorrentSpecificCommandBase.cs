@@ -10,7 +10,6 @@ namespace QBittorrent.CommandLineInterface.Commands
 {
     public abstract class TorrentSpecificCommandBase : AuthenticatedCommandBase
     {
-        [Argument(0, "<HASH>", "Full or partial torrent hash")]
         [Required]
         [StringLength(40, MinimumLength = 1)]
         public virtual string Hash { get; set; }

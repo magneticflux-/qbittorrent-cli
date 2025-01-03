@@ -40,7 +40,7 @@ namespace QBittorrent.CommandLineInterface.Formats
                 Delimiter = options.TryGetNotEmptyString("delimiter", ","),
                 Quote = options.TryGetChar("quote", '"'),
                 Sanitize = false,
-                Culture = options.TryGetNotEmptyString("culture", null)
+                Culture = options.TryGetNotEmptyString("culture", null),
             };
         }
 

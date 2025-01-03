@@ -311,7 +311,8 @@ namespace QBittorrent.CommandLineInterface.Commands
                     {
                         var certWriter = new PemWriter(certOutput);
                         var keyWriter = new PemWriter(keyOutput);
-                        var store = new Pkcs12Store(input, passwordFinder.GetPassword());
+                        var store = new Pkcs12StoreBuilder().Build();
+                        store.Load(input, passwordFinder.GetPassword());
                         foreach (string alias in store.Aliases)
                         {
                             var cert = store.GetCertificate(alias);

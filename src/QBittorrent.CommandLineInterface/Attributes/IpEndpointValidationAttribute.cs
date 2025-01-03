@@ -37,27 +37,6 @@ namespace QBittorrent.CommandLineInterface.Attributes
                 }
             }
 
-#if NETFRAMEWORK
-            if (IPAddress.TryParse(GetString(s.Slice(0, addressLength)), out var address))
-            {
-                uint port = 0;
-                if (addressLength == s.Length ||
-                    (uint.TryParse(GetString(s.Slice(addressLength + 1)), NumberStyles.None, CultureInfo.InvariantCulture, out port) && port <= IPEndPoint.MaxPort))
-
-                {
-                    result = new IPEndPoint(address, (int)port);
-                    return true;
-                }
-            }
-
-            unsafe static string GetString(in ReadOnlySpan<char> span)
-            {
-                fixed (char* p = span)
-                {
-                    return new string(p, 0, span.Length);
-                }
-            }
-#else
             if (IPAddress.TryParse(s.Slice(0, addressLength), out var address))
             {
                 uint port = 0;
@@ -69,7 +48,6 @@ namespace QBittorrent.CommandLineInterface.Attributes
                     return true;
                 }
             }
-#endif
 
             result = null;
             return false;

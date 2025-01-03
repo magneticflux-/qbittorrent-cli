@@ -27,8 +27,8 @@ namespace QBittorrent.CommandLineInterface.Attributes
             if (value == null && AllowEmpty)
                 return ValidationResult.Success;
 
-            if (value is string str && 
-                (EnumHelper.TryParse(EnumType, str, !CaseSensitive, out _) || (AllowEmpty && string.IsNullOrEmpty(str)))
+            if (value is string str &&
+                (Enum.TryParse(EnumType, str, !CaseSensitive, out _) || (AllowEmpty && string.IsNullOrEmpty(str)))
             )
                 return ValidationResult.Success;
 

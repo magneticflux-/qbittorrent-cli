@@ -89,10 +89,10 @@ namespace QBittorrent.CommandLineInterface.ColorSchemes
             return config.ToObject<ColorScheme>();
         }
 
-        private static async Task<JsonSchema4> LoadSchemaAsync()
+        private static async Task<JsonSchema> LoadSchemaAsync()
         {
             var json = ReadJsonFromResource(SchemaResource);
-            return await JsonSchema4.FromJsonAsync(json).ConfigureAwait(false);
+            return await JsonSchema.FromJsonAsync(json).ConfigureAwait(false);
         }
 
         private static string ReadJsonFromResource(string resourceName)

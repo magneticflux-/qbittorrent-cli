@@ -37,22 +37,7 @@ namespace QBittorrent.CommandLineInterface.Commands
         }
 
         protected QBittorrentClient CreateClient()
-        {
-#if NETFRAMEWORK || NETCOREAPP2_0
-            var handler = new HttpClientHandler
-            {
-                Proxy = GetProxy(),
-                UseDefaultCredentials = NetworkSettings.UseDefaultCredentials,
-                Credentials = GetCredentials(),
-                PreAuthenticate = true
-            };
-
-            if (NetworkSettings.IgnoreCertificateErrors)
-            {
-                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, error) => true;
-            }
-            
-#else           
+        {    
             var handler = new SocketsHttpHandler
             {
                 Proxy = GetProxy(),
@@ -64,7 +49,6 @@ namespace QBittorrent.CommandLineInterface.Commands
             {
                 handler.SslOptions.RemoteCertificateValidationCallback = (message, cert, chain, error) => true;
             }
-#endif
             return new QBittorrentClient(new Uri(Url, UriKind.Absolute), handler, true);
         }
 
@@ -106,12 +90,10 @@ namespace QBittorrent.CommandLineInterface.Commands
                 cache.Add(cred.Url, cred.AuthType.ToString(), cred.ToCredential());
             }
 
-#if !(NETFRAMEWORK || NETCOREAPP2_0)
             if (NetworkSettings.UseDefaultCredentials)
             {
                 return new CredentialCacheWithDefault(cache);
             }
-#endif
             return cache;
         }
 

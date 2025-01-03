@@ -13,16 +13,15 @@ namespace QBittorrent.CommandLineInterface.Formats
 
         public string Culture { get; set; }
 
-        public static implicit operator Configuration(CsvFormatOptions options)
+        public static implicit operator CsvConfiguration(CsvFormatOptions options)
         {
-            return new Configuration
+            return new CsvConfiguration(string.IsNullOrWhiteSpace(options.Culture)
+                ? CultureInfo.InvariantCulture
+                : CultureInfo.GetCultureInfo(options.Culture))
             {
                 Delimiter = options.Delimiter,
                 Quote = options.Quote,
-                SanitizeForInjection = options.Sanitize,
-                CultureInfo = string.IsNullOrWhiteSpace(options.Culture) 
-                    ? CultureInfo.InvariantCulture 
-                    : CultureInfo.GetCultureInfo(options.Culture)
+                InjectionOptions = options.Sanitize ? InjectionOptions.Escape : InjectionOptions.None
             };
         }
     }

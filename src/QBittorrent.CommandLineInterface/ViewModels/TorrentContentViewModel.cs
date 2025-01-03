@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using QBittorrent.Client;
+using Range = QBittorrent.Client.Range;
 
 namespace QBittorrent.CommandLineInterface.ViewModels
 {
@@ -35,6 +36,6 @@ namespace QBittorrent.CommandLineInterface.ViewModels
         public bool IsSeeding => _wrappedObject.IsSeeding;
 
         [Display(Name = "Piece Range")]
-        public Client.Range PieceRange => _wrappedObject.PieceRange;
+        public Range PieceRange => _wrappedObject.PieceRange;
     }
 }

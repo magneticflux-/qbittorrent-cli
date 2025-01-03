@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Alba.CsConsoleFormat;
 using McMaster.Extensions.CommandLineUtils;
@@ -59,9 +57,11 @@ namespace QBittorrent.CommandLineInterface.Commands
                 {
                     CustomFormatters = new Dictionary<string, Func<object, object>>
                     {
-                        [nameof(PeerPartialInfoViewModel.Files)] = FormatFiles,
+                        [nameof(PeerPartialInfoViewModel.Files)] = FormatFiles
                     };
                 }
+
+                protected override IReadOnlyDictionary<string, Func<object, object>> ListCustomFormatters => CustomFormatters;
 
                 protected override async Task<int> OnExecuteTorrentSpecificAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                 {
@@ -91,7 +91,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                                 new Column {Width = GridLength.Auto},
                                 new Column {Width = GridLength.Auto},
                                 new Column {Width = GridLength.Auto},
-                                new Column {Width = GridLength.Auto},
+                                new Column {Width = GridLength.Auto}
                             },
                             Children =
                             {
@@ -112,7 +112,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                                     new Cell(FormatSpeed(p.DownloadSpeed).PadLeft(10)),
                                     new Cell(FormatSpeed(p.UploadSpeed).PadLeft(10)),
                                     new Cell(FormatData(p.Downloaded).PadLeft(8)),
-                                    new Cell(FormatData(p.Uploaded).PadLeft(8)),
+                                    new Cell(FormatData(p.Uploaded).PadLeft(8))
                                 })
                             },
                             Stroke = LineThickness.Single
@@ -121,8 +121,6 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                     ConsoleRenderer.RenderDocument(doc);
                 }
-
-                protected override IReadOnlyDictionary<string, Func<object, object>> ListCustomFormatters => CustomFormatters;
 
                 private string FormatData(long? amount)
                 {

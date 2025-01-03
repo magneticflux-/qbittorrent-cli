@@ -13,7 +13,13 @@ namespace QBittorrent.CommandLineInterface.Commands
     {
         protected internal const string FormatHelpText =
             "\nSee https://github.com/fedarovich/qbittorrent-cli/wiki/Output-Formats for more information about output formats.\n";
-        
+
+        protected ClientCommandBase()
+        {
+            GeneralSettings = SettingsService.Instance.GetGeneral();
+            NetworkSettings = SettingsService.Instance.GetNetwork();
+        }
+
         [Option("--url <SERVER_URL>", "QBittorrent Server URL", CommandOptionType.SingleValue)]
         public string Url { get; set; }
 
@@ -30,14 +36,8 @@ namespace QBittorrent.CommandLineInterface.Commands
 
         protected NetworkSettings NetworkSettings { get; }
 
-        protected ClientCommandBase()
-        {
-            GeneralSettings = SettingsService.Instance.GetGeneral();
-            NetworkSettings = SettingsService.Instance.GetNetwork();
-        }
-
         protected QBittorrentClient CreateClient()
-        {    
+        {
             var handler = new SocketsHttpHandler
             {
                 Proxy = GetProxy(),
@@ -60,7 +60,7 @@ namespace QBittorrent.CommandLineInterface.Commands
             var proxy = new WebProxy
             {
                 Address = NetworkSettings.Proxy.Address,
-                BypassProxyOnLocal = NetworkSettings.Proxy.BypassLocal,
+                BypassProxyOnLocal = NetworkSettings.Proxy.BypassLocal
             };
 
             if (NetworkSettings.Proxy.Bypass?.Any() == true)

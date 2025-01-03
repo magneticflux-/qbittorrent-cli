@@ -42,7 +42,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     console.WriteLineColored($"The are several torrents matching partial hash {Hash}:", ColorScheme.Current.Normal);
                     var numbers = (int)Math.Log10(matching.Count) + 1;
                     var nameWidth = Console.BufferWidth - (numbers + 45);
-                    for (int i = 0; i < matching.Count; i++)
+                    for (var i = 0; i < matching.Count; i++)
                     {
                         var torrent = matching[i];
                         var name = torrent.Name.Length < nameWidth
@@ -51,7 +51,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         console.WriteLineColored($"[{(i + 1).ToString().PadLeft(numbers)}] {torrent.Hash} {name}", ColorScheme.Current.Normal);
                     }
 
-                    int index = 0;
+                    var index = 0;
                     while (index <= 0 || index > matching.Count)
                     {
                         index = Prompt.GetInt("Please, select the required one:");
@@ -59,13 +59,13 @@ namespace QBittorrent.CommandLineInterface.Commands
                     Hash = matching[index - 1].Hash;
                 }
             }
-            
+
             return await OnExecuteTorrentSpecificAsync(client, app, console);
         }
 
-        protected  abstract Task<int> OnExecuteTorrentSpecificAsync(
+        protected abstract Task<int> OnExecuteTorrentSpecificAsync(
             QBittorrentClient client,
-            CommandLineApplication app, 
+            CommandLineApplication app,
             IConsole console);
     }
 }

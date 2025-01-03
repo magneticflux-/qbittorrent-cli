@@ -1,61 +1,61 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <AssemblyName>qbt</AssemblyName>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>disable</Nullable>
-    <LangVersion>default</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <AssemblyName>qbt</AssemblyName>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <Authors>Pavel Fedarovich</Authors>
-    <Company>Pavel Fedarovich</Company>
-    <Copyright>© Pavel Fedarovich, 2018-$([System.DateTime]::Now.Year)</Copyright>
-    <PackageProjectUrl>https://github.com/fedarovich/qbittorrent-cli</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/fedarovich/qbittorrent-cli</RepositoryUrl>
-    <PackageTags>torrent qbittorrent</PackageTags>
-    <PackageLicenseUrl>https://github.com/fedarovich/qbittorrent-cli/blob/master/LICENSE</PackageLicenseUrl>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Authors>Pavel Fedarovich</Authors>
+        <Company>Pavel Fedarovich</Company>
+        <Copyright>© Pavel Fedarovich, 2018-$([System.DateTime]::Now.Year)</Copyright>
+        <PackageProjectUrl>https://github.com/fedarovich/qbittorrent-cli</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/fedarovich/qbittorrent-cli</RepositoryUrl>
+        <PackageTags>torrent qbittorrent</PackageTags>
+        <PackageLicenseUrl>https://github.com/fedarovich/qbittorrent-cli/blob/master/LICENSE</PackageLicenseUrl>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <RestoreAdditionalProjectSources>https://www.myget.org/F/fedarovich/api/v3/index.json</RestoreAdditionalProjectSources>
-  </PropertyGroup>
+    <PropertyGroup>
+        <RestoreAdditionalProjectSources>https://www.myget.org/F/fedarovich/api/v3/index.json</RestoreAdditionalProjectSources>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="ColorSchemes\dark.json" />
-    <None Remove="ColorSchemes\light.json" />
-    <None Remove="Schemas\colors-schema.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="ColorSchemes\light.json" />
-    <EmbeddedResource Include="ColorSchemes\dark.json" />
-    <EmbeddedResource Include="Schemas\colors-schema.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Commands\NetworkCommand.Credential.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Alba.CsConsoleFormat" Version="1.0.0" />
-    <PackageReference Include="BencodeNET" Version="5.0.0" />
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.5.0" />
-    <PackageReference Include="CsvHelper" Version="33.0.1" />
-    <PackageReference Include="IPNetwork2" Version="3.0.667" />
-    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1" />
-    <PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NJsonSchema" Version="11.1.0" />
-    <PackageReference Include="QBittorrent.Client" Version="1.9.24285.1" />
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.0" />
-  </ItemGroup>
-  
-  <Target Name="IncludeRunScripts" AfterTargets="ComputeFilesToPublish" Condition="'$(RuntimeIdentifier)' == ''">
     <ItemGroup>
-      <ResolvedFileToPublish Include="qbt.cmd" RelativePath="qbt.cmd" />
-      <ResolvedFileToPublish Include="qbt.sh" RelativePath="qbt" />
+        <None Remove="ColorSchemes\dark.json"/>
+        <None Remove="ColorSchemes\light.json"/>
+        <None Remove="Schemas\colors-schema.json"/>
     </ItemGroup>
-  </Target>
+
+    <ItemGroup>
+        <EmbeddedResource Include="ColorSchemes\light.json"/>
+        <EmbeddedResource Include="ColorSchemes\dark.json"/>
+        <EmbeddedResource Include="Schemas\colors-schema.json"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="Commands\NetworkCommand.Credential.cs"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Alba.CsConsoleFormat" Version="1.0.0"/>
+        <PackageReference Include="BencodeNET" Version="5.0.0"/>
+        <PackageReference Include="BouncyCastle.Cryptography" Version="2.5.0"/>
+        <PackageReference Include="CsvHelper" Version="33.0.1"/>
+        <PackageReference Include="IPNetwork2" Version="3.0.667"/>
+        <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1"/>
+        <PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="NJsonSchema" Version="11.1.0"/>
+        <PackageReference Include="QBittorrent.Client" Version="1.9.24285.1"/>
+        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.0"/>
+    </ItemGroup>
+
+    <Target Name="IncludeRunScripts" AfterTargets="ComputeFilesToPublish" Condition="'$(RuntimeIdentifier)' == ''">
+        <ItemGroup>
+            <ResolvedFileToPublish Include="qbt.cmd" RelativePath="qbt.cmd"/>
+            <ResolvedFileToPublish Include="qbt.sh" RelativePath="qbt"/>
+        </ItemGroup>
+    </Target>
 </Project>

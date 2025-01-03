@@ -1,35 +1,29 @@
 ﻿{
   "$schema": "https://raw.githubusercontent.com/fedarovich/qbittorrent-cli/master/src/QBittorrent.CommandLineInterface/Schemas/colors-schema.json",
-
   "normal": {
     "bg": "system-bg",
     "fg": "system-fg"
   },
-
   "strong": {
     "bg": "system-bg",
     "fg": "yellow",
     "fg-alt": "dark-blue"
   },
-
   "warning": {
     "bg": "system-bg",
     "fg": "yellow",
     "fg-alt": "dark-yellow"
   },
-
   "active": {
     "bg": "system-bg",
     "fg": "green",
     "fg-alt": "dark-cyan"
   },
-
   "inactive": {
     "bg": "system-bg",
     "fg": "dark-gray",
     "fg-alt": "gray"
   },
-
   "log": {
     "status-normal": {
       "bg": "system-bg",
@@ -62,7 +56,6 @@
       "fg-alt": "dark-gray"
     }
   },
-
   "torrent-status": {
     "allocating": {
       "bg": "system-bg",

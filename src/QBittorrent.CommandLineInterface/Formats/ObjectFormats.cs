@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QBittorrent.CommandLineInterface.Formats
+﻿namespace QBittorrent.CommandLineInterface.Formats
 {
     public static class ObjectFormats
     {

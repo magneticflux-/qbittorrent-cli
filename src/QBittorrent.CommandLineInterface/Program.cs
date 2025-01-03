@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection;
 using McMaster.Extensions.CommandLineUtils;
 using QBittorrent.Client;
@@ -24,7 +23,11 @@ namespace QBittorrent.CommandLineInterface
     [VersionOptionFromMember(MemberName = nameof(GetVersion))]
     public class Program
     {
-        static int Main(string[] args)
+
+        [Option("--print-stacktrace", "Prints exception stacktrace", CommandOptionType.NoValue, ShowInHelpText = false, Inherited = true)]
+        public bool PrintStackTrace { get; set; }
+
+        private static int Main(string[] args)
         {
             var app = new CommandLineApplication<Program>();
             try
@@ -33,7 +36,7 @@ namespace QBittorrent.CommandLineInterface
                     .UseDefaultConventions()
                     .UsePagerForHelpText(false)
                     .MakeSuggestionsInErrorMessage();
-                int code = app.Execute(args);
+                var code = app.Execute(args);
                 return code;
             }
             catch (ApiNotSupportedException e)
@@ -55,16 +58,6 @@ namespace QBittorrent.CommandLineInterface
             {
                 PrintError(e);
                 return ExitCodes.Failure;
-            }
-            finally
-            {
-#if DEBUG
-                if (Debugger.IsAttached)
-                {
-                    Console.WriteLine("Press any key to exit...");
-                    Console.ReadKey();
-                }
-#endif
             }
 
             void PrintError(Exception ex)
@@ -88,7 +81,7 @@ namespace QBittorrent.CommandLineInterface
                         }
                     } while ((exception = exception.InnerException) != null);
                 }
-                
+
                 Console.ResetColor();
             }
 
@@ -104,7 +97,7 @@ namespace QBittorrent.CommandLineInterface
 
                 string GetQBittorrentVersion()
                 {
-                    if (apiVersion == new ApiVersion(2, 0 , 0))
+                    if (apiVersion == new ApiVersion(2))
                         return "4.1";
                     if (apiVersion == new ApiVersion(2, 0, 1))
                         return "4.1.1";
@@ -164,8 +157,5 @@ namespace QBittorrent.CommandLineInterface
             var attr = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>();
             return attr.InformationalVersion;
         }
-
-        [Option("--print-stacktrace", "Prints exception stacktrace", CommandOptionType.NoValue, ShowInHelpText = false, Inherited = true)]
-        public bool PrintStackTrace { get; set; }
     }
 }

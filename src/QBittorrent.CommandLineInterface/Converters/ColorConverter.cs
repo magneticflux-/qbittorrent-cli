@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 using QBittorrent.CommandLineInterface.ColorSchemes;
 
@@ -25,7 +23,7 @@ namespace QBittorrent.CommandLineInterface.Converters
                 return null;
 
             if (reader.TokenType == JsonToken.String)
-                return new Color((string) reader.Value);
+                return new Color((string)reader.Value);
 
             throw new JsonSerializationException($"Unexpected token {reader.TokenType}.");
         }

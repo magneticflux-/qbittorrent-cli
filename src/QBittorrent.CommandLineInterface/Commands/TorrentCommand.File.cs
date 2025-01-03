@@ -42,7 +42,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                                     new Column {Width = GridLength.Auto},
                                     new Column {Width = GridLength.Star(1)},
                                     new Column {Width = GridLength.Auto},
-                                    new Column {Width = GridLength.Auto},
+                                    new Column {Width = GridLength.Auto}
                                 },
                                 Children =
                                 {
@@ -52,10 +52,10 @@ namespace QBittorrent.CommandLineInterface.Commands
                                     UIHelper.Header("Progress"),
                                     list.Select(c => new[]
                                     {
-                                        new Cell(c.Id), 
+                                        new Cell(c.Id),
                                         new Cell(c.Name),
                                         new Cell(c.Size.ToString("N0")),
-                                        new Cell(c.Progress.ToString("P0")), 
+                                        new Cell(c.Progress.ToString("P0"))
                                     })
                                 },
                                 Stroke = LineThickness.Single
@@ -124,13 +124,13 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 protected override async Task<int> OnExecuteTorrentSpecificAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                 {
-                    if ((File == null) == (OldName == null))
+                    if (File == null == (OldName == null))
                     {
                         throw new InvalidOperationException("Either --file or --old-name option must be specified.");
                     }
 
                     var version = await client.GetApiVersionAsync();
-                    if (version < new ApiVersion(2, 8, 0))
+                    if (version < new ApiVersion(2, 8))
                     {
                         await RenameFileLegacy(client);
                     }

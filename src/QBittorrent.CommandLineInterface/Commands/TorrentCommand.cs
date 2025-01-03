@@ -55,24 +55,24 @@ namespace QBittorrent.CommandLineInterface.Commands
                         {
                             Columns =
                             {
-                                    new Column {Width = GridLength.Auto},
-                                    new Column {Width = GridLength.Star(1)},
-                                    new Column {Width = GridLength.Auto},
-                                    new Column {Width = GridLength.Auto},
+                                new Column {Width = GridLength.Auto},
+                                new Column {Width = GridLength.Star(1)},
+                                new Column {Width = GridLength.Auto},
+                                new Column {Width = GridLength.Auto}
                             },
                             Children =
                             {
-                                    UIHelper.Header("Id"),
-                                    UIHelper.Header("Name"),
-                                    UIHelper.Header("Size"),
-                                    UIHelper.Header("Progress"),
-                                    list.Select(c => new[]
-                                    {
-                                        new Cell(c.Id),
-                                        new Cell(c.Name),
-                                        new Cell(c.Size.ToString("N0")),
-                                        new Cell(c.Progress.ToString("P0")),
-                                    })
+                                UIHelper.Header("Id"),
+                                UIHelper.Header("Name"),
+                                UIHelper.Header("Size"),
+                                UIHelper.Header("Progress"),
+                                list.Select(c => new[]
+                                {
+                                    new Cell(c.Id),
+                                    new Cell(c.Name),
+                                    new Cell(c.Size.ToString("N0")),
+                                    new Cell(c.Progress.ToString("P0"))
+                                })
                             },
                             Stroke = LineThickness.Single
                         })

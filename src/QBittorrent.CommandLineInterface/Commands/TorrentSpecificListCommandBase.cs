@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text;
-using McMaster.Extensions.CommandLineUtils;
 using QBittorrent.CommandLineInterface.Formats;
 
 namespace QBittorrent.CommandLineInterface.Commands
@@ -18,8 +16,13 @@ namespace QBittorrent.CommandLineInterface.Commands
 
         public virtual string Format { get; set; }
 
+        protected virtual IReadOnlyDictionary<string, Func<object, object>> ListCustomFormatters => null;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void Print(IEnumerable<T> data, bool preferList = false) => _formatter.PrintFormat(data, Format, preferList);
+        protected void Print(IEnumerable<T> data, bool preferList = false)
+        {
+            _formatter.PrintFormat(data, Format, preferList);
+        }
 
         protected virtual void PrintTable(IEnumerable<T> list)
         {
@@ -30,7 +33,5 @@ namespace QBittorrent.CommandLineInterface.Commands
         {
             UIHelper.PrintList(list, ListCustomFormatters);
         }
-
-        protected virtual IReadOnlyDictionary<string, Func<object, object>> ListCustomFormatters => null;
     }
 }

@@ -51,7 +51,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     {
                         var prefs = await client.GetPreferencesAsync();
                         var banList = prefs.BannedIpAddresses ?? new List<string>();
-                        bool modified = false;
+                        var modified = false;
                         foreach (var address in Addresses)
                         {
                             if (!banList.Contains(address))
@@ -84,7 +84,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         var prefs = await client.GetPreferencesAsync();
                         var banList = prefs.BannedIpAddresses ?? new List<string>();
 
-                        bool modified = false;
+                        var modified = false;
                         foreach (var address in Addresses)
                         {
                             modified |= banList.Remove(address);
@@ -92,7 +92,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                         if (modified)
                         {
-                            prefs = new Preferences { BannedIpAddresses = banList };
+                            prefs = new Preferences {BannedIpAddresses = banList};
                             await client.SetPreferencesAsync(prefs);
                         }
 
@@ -105,7 +105,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 {
                     protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                     {
-                        var prefs = new Preferences { BannedIpAddresses = new string[0] };
+                        var prefs = new Preferences {BannedIpAddresses = new string[0]};
                         await client.SetPreferencesAsync(prefs);
                         return ExitCodes.Success;
                     }

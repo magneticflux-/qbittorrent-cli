@@ -30,6 +30,8 @@ namespace QBittorrent.CommandLineInterface.Commands
             [ShareSeedingTimeLimitValidation]
             public string InactiveSeedingTimeLimit { get; set; }
 
+            protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters => _customFormatters;
+
             protected override async Task<int> OnExecuteTorrentSpecificAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
             {
                 var partialData = await client.GetPartialDataAsync();
@@ -124,8 +126,6 @@ namespace QBittorrent.CommandLineInterface.Commands
                     return time == ShareLimits.SeedingTime.Unlimited ? "None" : time?.ToString();
                 }
             }
-
-            protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters => _customFormatters;
 
             private double? GetRatioLimit()
             {

@@ -31,7 +31,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                             new Column {Width = GridLength.Star(1), MinWidth = 20},
                             new Column {Width = GridLength.Auto},
                             new Column {Width = GridLength.Auto},
-                            new Column {Width = GridLength.Auto},
+                            new Column {Width = GridLength.Auto}
                         },
                         Children =
                         {
@@ -82,7 +82,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         c => AuthType == c.AuthType && Url == c.Url);
                     if (cred == null)
                     {
-                        cred = new NetworkSettings.SiteCredentials()
+                        cred = new NetworkSettings.SiteCredentials
                         {
                             Url = Url,
                             AuthType = AuthType.Value

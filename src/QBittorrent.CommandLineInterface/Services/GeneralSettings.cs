@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using QBittorrent.CommandLineInterface.Converters;

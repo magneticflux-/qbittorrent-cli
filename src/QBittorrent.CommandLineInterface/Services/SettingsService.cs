@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
@@ -8,7 +7,6 @@ namespace QBittorrent.CommandLineInterface.Services
 {
     public class SettingsService
     {
-        public static SettingsService Instance { get; } = new SettingsService();
 
         static SettingsService()
         {
@@ -17,6 +15,8 @@ namespace QBittorrent.CommandLineInterface.Services
         private SettingsService()
         {
         }
+
+        public static SettingsService Instance { get; } = new SettingsService();
 
         public GeneralSettings GetGeneral()
         {
@@ -54,7 +54,7 @@ namespace QBittorrent.CommandLineInterface.Services
             ProxySettings GetLegacyProxySettings(GeneralSettings settings)
             {
                 return settings.Other != null && settings.Other.TryGetValue("Proxy", out var jtoken)
-                    ? jtoken.ToObject<ProxySettings>() 
+                    ? jtoken.ToObject<ProxySettings>()
                     : null;
             }
 
@@ -78,7 +78,7 @@ namespace QBittorrent.CommandLineInterface.Services
             var serializer = new JsonSerializer();
             using (var stream = file.Open(FileMode.Create, FileAccess.Write))
             using (var textWriter = new StreamWriter(stream, Encoding.UTF8))
-            using (var jsonWriter = new JsonTextWriter(textWriter) {Formatting = Formatting.Indented} )
+            using (var jsonWriter = new JsonTextWriter(textWriter) {Formatting = Formatting.Indented})
             {
                 serializer.Serialize(jsonWriter, generalSettings);
             }
@@ -93,7 +93,7 @@ namespace QBittorrent.CommandLineInterface.Services
             var serializer = new JsonSerializer();
             using (var stream = file.Open(FileMode.Create, FileAccess.Write))
             using (var textWriter = new StreamWriter(stream, Encoding.UTF8))
-            using (var jsonWriter = new JsonTextWriter(textWriter) { Formatting = Formatting.Indented })
+            using (var jsonWriter = new JsonTextWriter(textWriter) {Formatting = Formatting.Indented})
             {
                 serializer.Serialize(jsonWriter, settings);
             }

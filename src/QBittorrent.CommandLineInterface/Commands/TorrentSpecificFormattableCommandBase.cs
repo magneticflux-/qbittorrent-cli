@@ -18,15 +18,24 @@ namespace QBittorrent.CommandLineInterface.Commands
             _formatter = new ObjectFormatter<T>(PrintList, FindProperty);
         }
 
-        protected virtual PropertyInfo FindProperty(string name) => _props.Value.FirstOrDefault(t => t.name == name).prop;
-
         protected virtual IReadOnlyDictionary<string, Func<object, object>> CustomFormatters => null;
-
-        protected virtual void PrintList(T data) => UIHelper.PrintObject(data, CustomFormatters);
-
-        protected void Print(in T obj) => _formatter.PrintFormat(obj, Format);
 
         [Option("-F|--format <OBJECT_FORMAT>", "Output format: list|csv|json|property", CommandOptionType.SingleValue)]
         public string Format { get; set; }
+
+        protected virtual PropertyInfo FindProperty(string name)
+        {
+            return _props.Value.FirstOrDefault(t => t.name == name).prop;
+        }
+
+        protected virtual void PrintList(T data)
+        {
+            UIHelper.PrintObject(data, CustomFormatters);
+        }
+
+        protected void Print(in T obj)
+        {
+            _formatter.PrintFormat(obj, Format);
+        }
     }
 }

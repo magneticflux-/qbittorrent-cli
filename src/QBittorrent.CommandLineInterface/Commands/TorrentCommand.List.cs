@@ -59,9 +59,9 @@ namespace QBittorrent.CommandLineInterface.Commands
                 SortColumns = fields.ToDictionary(x => x.Name, x => x.json, StringComparer.InvariantCultureIgnoreCase);
 
                 var regex = new Regex("[A-Z]{1}[a-z]*");
-                var states = 
+                var states =
                     from state in Enum.GetValues(typeof(TorrentState)).Cast<TorrentState>()
-                    let name = string.Join("-", regex.Matches(state.ToString()).Cast<Match>().Select(m => m.Value.ToLowerInvariant()))
+                    let name = string.Join("-", regex.Matches(state.ToString()).Select(m => m.Value.ToLowerInvariant()))
                     select (state, name);
 
                 TorrentStateColorKeys = states.ToDictionary(x => x.state, x => x.name);
@@ -70,8 +70,8 @@ namespace QBittorrent.CommandLineInterface.Commands
             [Option("--verbose", "Displays verbose information.", CommandOptionType.NoValue)]
             public bool Verbose { get; set; }
 
-            [Option("-f|--filter <STATUS>", 
-                "Filter by status: \nall|downloading|seeding|completed|paused|resumed|\nactive|inactive|errored|stalled|stalledDownloading|stalledUploading", 
+            [Option("-f|--filter <STATUS>",
+                "Filter by status: \nall|downloading|seeding|completed|paused|resumed|\nactive|inactive|errored|stalled|stalledDownloading|stalledUploading",
                 CommandOptionType.SingleValue)]
             [EnumValidation(typeof(TorrentListFilter), AllowEmpty = true)]
             public string Filter { get; set; }
@@ -105,7 +105,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     Category = Category,
                     Filter = Enum.TryParse(Filter, true, out TorrentListFilter filter) ? filter : TorrentListFilter.All,
                     SortBy = Sort != null
-                        ? (SortColumns.TryGetValue(Sort, out var sort) ? sort : null)
+                        ? SortColumns.TryGetValue(Sort, out var sort) ? sort : null
                         : null,
                     ReverseSort = Reverse,
                     Limit = Limit,
@@ -125,28 +125,28 @@ namespace QBittorrent.CommandLineInterface.Commands
                         new Grid
                         {
                             Stroke = new LineThickness(LineWidth.None),
-                            Columns = { UIHelper.FieldsColumns },
+                            Columns = {UIHelper.FieldsColumns},
                             Children =
-                                {
-                                    UIHelper.Row("Name", torrent.Name),
-                                    UIHelper.Row("State", torrent.State),
-                                    UIHelper.Row("Hash", torrent.Hash),
-                                    UIHelper.Row("Size", $"{torrent.Size:N0} bytes"),
-                                    UIHelper.Row("Progress", $"{torrent.Progress:P0}"),
-                                    UIHelper.Row("DL Speed", $"{FormatSpeed(torrent.DownloadSpeed)}"),
-                                    UIHelper.Row("UP Speed", $"{FormatSpeed(torrent.UploadSpeed)}"),
-                                    UIHelper.Row("Priority", torrent.Priority),
-                                    UIHelper.Row("Seeds", $"{torrent.ConnectedSeeds} of {torrent.TotalSeeds}"),
-                                    UIHelper.Row("Leechers", $"{torrent.ConnectedLeechers} of {torrent.TotalLeechers}"),
-                                    UIHelper.Row("Ratio", $"{torrent.Ratio:F2}"),
-                                    UIHelper.Row("ETA", FormatEta(torrent.EstimatedTime)),
-                                    UIHelper.Row("Category", torrent.Category),
-                                    UIHelper.Row("Tags", $"{string.Join(", ", torrent.Tags ?? Enumerable.Empty<string>())}"),
-                                    UIHelper.Row("Save path", torrent.SavePath),
-                                    UIHelper.Row("Added", $"{torrent.AddedOn?.ToLocalTime():G}"),
-                                    UIHelper.Row("Completion", $"{torrent.CompletionOn?.ToLocalTime():G}"),
-                                    UIHelper.Row("Options", GetOptions(torrent))
-                                },
+                            {
+                                UIHelper.Row("Name", torrent.Name),
+                                UIHelper.Row("State", torrent.State),
+                                UIHelper.Row("Hash", torrent.Hash),
+                                UIHelper.Row("Size", $"{torrent.Size:N0} bytes"),
+                                UIHelper.Row("Progress", $"{torrent.Progress:P0}"),
+                                UIHelper.Row("DL Speed", $"{FormatSpeed(torrent.DownloadSpeed)}"),
+                                UIHelper.Row("UP Speed", $"{FormatSpeed(torrent.UploadSpeed)}"),
+                                UIHelper.Row("Priority", torrent.Priority),
+                                UIHelper.Row("Seeds", $"{torrent.ConnectedSeeds} of {torrent.TotalSeeds}"),
+                                UIHelper.Row("Leechers", $"{torrent.ConnectedLeechers} of {torrent.TotalLeechers}"),
+                                UIHelper.Row("Ratio", $"{torrent.Ratio:F2}"),
+                                UIHelper.Row("ETA", FormatEta(torrent.EstimatedTime)),
+                                UIHelper.Row("Category", torrent.Category),
+                                UIHelper.Row("Tags", $"{string.Join(", ", torrent.Tags ?? Enumerable.Empty<string>())}"),
+                                UIHelper.Row("Save path", torrent.SavePath),
+                                UIHelper.Row("Added", $"{torrent.AddedOn?.ToLocalTime():G}"),
+                                UIHelper.Row("Completion", $"{torrent.CompletionOn?.ToLocalTime():G}"),
+                                UIHelper.Row("Options", GetOptions(torrent))
+                            },
                             Margin = new Thickness(0, 0, 0, 2)
                         }
                     )
@@ -183,7 +183,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                             new Column {Width = GridLength.Auto},
                             new Column {Width = GridLength.Auto},
                             new Column {Width = GridLength.Auto},
-                            new Column {Width = GridLength.Auto},
+                            new Column {Width = GridLength.Auto}
                         },
                         Children =
                         {
@@ -208,7 +208,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 ).SetColors(ColorScheme.Current.Normal);
 
                 ConsoleRenderer.RenderDocument(doc);
-                
+
                 Cell FormatState(TorrentState state)
                 {
                     var colorSet = GetStateColors(state);
@@ -271,7 +271,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     return colorSet;
                 }
             }
-            
+
             private static string FormatSpeed(long speed)
             {
                 if (speed < 1024)

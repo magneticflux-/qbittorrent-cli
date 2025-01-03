@@ -78,7 +78,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 }
             }
 
-            [Command(Description = "Updates the search plugins.", 
+            [Command(Description = "Updates the search plugins.",
                 ExtendedHelpText = "This command will also install default search plugins if they are missing.")]
             public class Update : AuthenticatedCommandBase
             {
@@ -112,7 +112,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                             {
                                 new Column {Width = GridLength.Auto},
                                 new Column {Width = GridLength.Star(1)},
-                                new Column {Width = GridLength.Auto},
+                                new Column {Width = GridLength.Auto}
                             },
                             Children =
                             {

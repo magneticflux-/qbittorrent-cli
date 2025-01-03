@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using QBittorrent.Client;
@@ -81,7 +80,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                             "--automatic-torrent-management option is ignored by qBittorrent versions earlier than 4.1.5.",
                             ColorScheme.Current.Warning);
                     }
-                    
+
                     if (Tags != null && apiVersion < new ApiVersion(2, 6, 2))
                     {
                         console.WriteLineColored(

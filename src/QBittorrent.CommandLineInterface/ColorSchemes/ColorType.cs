@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QBittorrent.CommandLineInterface.ColorSchemes
+﻿namespace QBittorrent.CommandLineInterface.ColorSchemes
 {
     public enum ColorType
     {

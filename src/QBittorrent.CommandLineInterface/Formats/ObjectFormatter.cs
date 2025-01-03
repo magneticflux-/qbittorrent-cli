@@ -9,14 +9,13 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using McMaster.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
-using QBittorrent.CommandLineInterface.Converters;
 
 namespace QBittorrent.CommandLineInterface.Formats
 {
     public class ObjectFormatter<T>
     {
-        private readonly Action<T> _printList;
         private readonly Func<string, PropertyInfo> _customPropertyBinder;
+        private readonly Action<T> _printList;
 
         public ObjectFormatter(Action<T> printList = null, Func<string, PropertyInfo> customPropertyBinder = null)
         {
@@ -70,7 +69,7 @@ namespace QBittorrent.CommandLineInterface.Formats
         {
             using (var writer = new CsvWriter(Console.Out, (CsvConfiguration)options, true))
             {
-                writer.WriteRecords(new [] {data});
+                writer.WriteRecords(new[] {data});
             }
         }
 
@@ -84,7 +83,8 @@ namespace QBittorrent.CommandLineInterface.Formats
                 ?? TryGetPropertyByJsonName()
                 ?? TryGetPropertyByDisplayName()
                 ?? _customPropertyBinder?.Invoke(options.Name)
-                ?? throw new Exception($"Cannot find property '{options.Name}'."); ;
+                ?? throw new Exception($"Cannot find property '{options.Name}'.");
+            ;
             var value = property.GetValue(data);
 
             switch (value)
@@ -107,8 +107,11 @@ namespace QBittorrent.CommandLineInterface.Formats
             }
 
 
-            PropertyInfo TryGetPropertyByName() => type.GetProperty(options.Name)
-                ?? type.GetProperty(options.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            PropertyInfo TryGetPropertyByName()
+            {
+                return type.GetProperty(options.Name)
+                    ?? type.GetProperty(options.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            }
 
             PropertyInfo TryGetPropertyByJsonName()
             {

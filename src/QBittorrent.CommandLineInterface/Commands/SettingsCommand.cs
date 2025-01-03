@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Alba.CsConsoleFormat;
 using McMaster.Extensions.CommandLineUtils;
 using QBittorrent.CommandLineInterface.ColorSchemes;
@@ -14,12 +12,48 @@ namespace QBittorrent.CommandLineInterface.Commands
     [Subcommand(typeof(Reset))]
     public class SettingsCommand
     {
+
+        public int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            var settings = SettingsService.Instance.GetGeneral();
+
+            var doc = new Document(
+                new Grid
+                {
+                    Stroke = UIHelper.NoneStroke,
+                    Columns = {UIHelper.FieldsColumns},
+                    Children =
+                    {
+                        UIHelper.Row("URL", settings.Url),
+                        UIHelper.Row("User name",
+                            settings.Username != null
+                                ? new Span(settings.Username).SetColors(ColorScheme.Current.Normal)
+                                : new Span("<not set>").SetColors(ColorScheme.Current.Inactive)),
+                        UIHelper.Row("Password",
+                            settings.Password != null
+                                ? new Span("<encrypted>").SetColors(ColorScheme.Current.Active)
+                                : new Span("<not set>").SetColors(ColorScheme.Current.Inactive))
+                    }
+                }
+            ).SetColors(ColorScheme.Current.Normal);
+
+            ConsoleRenderer.RenderDocument(doc);
+            return ExitCodes.Success;
+        }
+
         [Command(Description = "Sets the new value for the specified setting.")]
         [Subcommand(typeof(Url))]
         [Subcommand(typeof(Username))]
         [Subcommand(typeof(Password))]
         public class Set
         {
+
+            public int OnExecute(CommandLineApplication app, IConsole console)
+            {
+                app.ShowHelp();
+                return ExitCodes.WrongUsage;
+            }
+
             [Command(Description = "Sets the default server URL.")]
             public class Url
             {
@@ -56,7 +90,7 @@ namespace QBittorrent.CommandLineInterface.Commands
             [Command(Description = "Sets the default password.", ExtendedHelpText = ExtendedHelp)]
             public class Password
             {
-                private const string ExtendedHelp = 
+                private const string ExtendedHelp =
                     "\n" +
                     "It may be not safe to store the password this way.\n" +
                     "This command does not accept the password to set as a parameter." +
@@ -93,12 +127,6 @@ namespace QBittorrent.CommandLineInterface.Commands
                     return ExitCodes.Success;
                 }
             }
-
-            public int OnExecute(CommandLineApplication app, IConsole console)
-            {
-                app.ShowHelp();
-                return ExitCodes.WrongUsage;
-            }
         }
 
         [Command(Description = "Resets the specified settings to their default values.")]
@@ -108,6 +136,13 @@ namespace QBittorrent.CommandLineInterface.Commands
         [Subcommand(typeof(All))]
         public class Reset
         {
+
+            public int OnExecute(CommandLineApplication app, IConsole console)
+            {
+                app.ShowHelp();
+                return ExitCodes.WrongUsage;
+            }
+
             [Command(Description = "Resets the server URL to " + GeneralSettings.DefaultUrl)]
             public class Url
             {
@@ -153,40 +188,6 @@ namespace QBittorrent.CommandLineInterface.Commands
                     return ExitCodes.Success;
                 }
             }
-
-            public int OnExecute(CommandLineApplication app, IConsole console)
-            {
-                app.ShowHelp();
-                return ExitCodes.WrongUsage;
-            }
-        }
-
-        public int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            var settings = SettingsService.Instance.GetGeneral();
-
-            var doc = new Document(
-                new Grid
-                {
-                    Stroke = UIHelper.NoneStroke,
-                    Columns = { UIHelper.FieldsColumns },
-                    Children =
-                    {
-                        UIHelper.Row("URL", settings.Url),
-                        UIHelper.Row("User name",
-                            settings.Username != null
-                                ? new Span(settings.Username).SetColors(ColorScheme.Current.Normal)
-                                : new Span("<not set>").SetColors(ColorScheme.Current.Inactive)),
-                        UIHelper.Row("Password",
-                            settings.Password != null
-                                ? new Span("<encrypted>").SetColors(ColorScheme.Current.Active)
-                                : new Span("<not set>").SetColors(ColorScheme.Current.Inactive)),
-                    }
-                }
-            ).SetColors(ColorScheme.Current.Normal);
-
-            ConsoleRenderer.RenderDocument(doc);
-            return ExitCodes.Success;
         }
     }
 }

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using QBittorrent.Client;
 using QBittorrent.CommandLineInterface.ColorSchemes;
-using QBittorrent.CommandLineInterface.Formats;
 using QBittorrent.CommandLineInterface.ViewModels.ServerPreferences;
 
 namespace QBittorrent.CommandLineInterface.Commands
@@ -143,7 +142,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     if (properties == null || properties.All(p => p == null))
                         return;
 
-                    if ((await client.GetApiVersionAsync() < version) ^ max)
+                    if (await client.GetApiVersionAsync() < version ^ max)
                     {
                         console.WriteLineColored(message, ColorScheme.Current.Warning);
                     }
@@ -220,7 +219,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 [Option("-f|--from <ADDRESS>", "From e-mail address. Requires qBittorrent 4.1.5 or later.", CommandOptionType.SingleValue)]
                 [MinApiVersion("2.2.0", "\"from\" option requires qBittorrent 4.1.5 or later.")]
                 public string MailNotificationSender { get; set; }
-                
+
                 [Option("-s|--smtp <SERVER>", "SMTP server URL.", CommandOptionType.SingleValue)]
                 public string MailNotificationSmtpServer { get; set; }
 
@@ -342,6 +341,13 @@ namespace QBittorrent.CommandLineInterface.Commands
                 [MinApiVersion("2.9.1", "\"proxy-general\" option requires qBittorrent 4.6.0 or later.")]
                 public bool? ProxyMisc { get; set; }
 
+                protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters =>
+                    new Dictionary<string, Func<object, object>>
+                    {
+                        [nameof(ProxyViewModel.ProxyType)] =
+                            value => value != null ? Enum.IsDefined(typeof(ProxyType), value) ? value.ToString() : "None" : null
+                    };
+
                 protected override Task Prepare(QBittorrentClient client, CommandLineApplication app, IConsole console)
                 {
                     if (AskForProxyPassword)
@@ -353,13 +359,6 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                     return Task.CompletedTask;
                 }
-
-                protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters =>
-                    new Dictionary<string, Func<object, object>>
-                    {
-                        [nameof(ProxyViewModel.ProxyType)] =
-                            value => value != null ? (Enum.IsDefined(typeof(ProxyType), value) ? value.ToString() : "None") : null
-                    };
             }
 
             [Command(Description = "Manages speed limits.", ExtendedHelpText = ExtendedHelp)]
@@ -422,7 +421,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                     (int? hour, int? minute) TryParseTime(string input)
                     {
-                        const DateTimeStyles styles = 
+                        const DateTimeStyles styles =
                             DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite | DateTimeStyles.NoCurrentDateDefault;
 
                         if (input == null)
@@ -499,7 +498,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 public bool? MaxRatioEnabled { get; set; }
 
                 [Option("-r|--max-ratio <VALUE>", "Maximal ratio", CommandOptionType.SingleValue)]
-                [Range(-1d, Double.MaxValue)]
+                [Range(-1d, double.MaxValue)]
                 public double? MaxRatio { get; set; }
 
                 [Option("-S|--max-seeding-time-enabled <BOOL>", "Enable/disable maximal seeding time limit", CommandOptionType.SingleValue)]

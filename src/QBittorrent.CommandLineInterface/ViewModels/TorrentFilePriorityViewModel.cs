@@ -1,6 +1,6 @@
-﻿using QBittorrent.Client;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using QBittorrent.Client;
 
 namespace QBittorrent.CommandLineInterface.ViewModels
 {

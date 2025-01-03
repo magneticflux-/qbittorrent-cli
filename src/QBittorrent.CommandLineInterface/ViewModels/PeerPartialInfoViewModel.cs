@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Text;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using QBittorrent.Client;
 
@@ -61,7 +61,7 @@ namespace QBittorrent.CommandLineInterface.ViewModels
         [Display(Name = "Country Code")]
         public string CountryCode => _wrappedObject.CountryCode;
 
-        [Newtonsoft.Json.JsonExtensionData]
+        [JsonExtensionData]
         public IDictionary<string, JToken> AdditionalData => _wrappedObject.AdditionalData;
     }
 }

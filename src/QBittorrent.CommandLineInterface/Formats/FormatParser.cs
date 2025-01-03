@@ -16,9 +16,9 @@ namespace QBittorrent.CommandLineInterface.Formats
 
             (string key, string value) ParseOption(string option)
             {
-                var optionParts = option.Split(new [] { '=' }, 2);
+                var optionParts = option.Split(new[] {'='}, 2);
                 return (
-                    optionParts[0], 
+                    optionParts[0],
                     optionParts.ElementAtOrDefault(1)
                         ?.Replace(@"\:", ":")
                         .Replace(@"\t", "\t"));
@@ -40,7 +40,7 @@ namespace QBittorrent.CommandLineInterface.Formats
                 Delimiter = options.TryGetNotEmptyString("delimiter", ","),
                 Quote = options.TryGetChar("quote", '"'),
                 Sanitize = false,
-                Culture = options.TryGetNotEmptyString("culture", null),
+                Culture = options.TryGetNotEmptyString("culture", null)
             };
         }
 
@@ -56,12 +56,12 @@ namespace QBittorrent.CommandLineInterface.Formats
 
         public static bool TryGetBoolean(this IReadOnlyDictionary<string, string> options, string key, bool defaultValue = false)
         {
-            return options.TryGetValue(key, out var stringValue) && bool.TryParse(stringValue, out bool result) ? result : defaultValue;
+            return options.TryGetValue(key, out var stringValue) && bool.TryParse(stringValue, out var result) ? result : defaultValue;
         }
 
         public static char TryGetChar(this IReadOnlyDictionary<string, string> options, string key, char defaultValue = default)
         {
-            return options.TryGetValue(key, out var stringValue) && char.TryParse(stringValue, out char result) ? result : defaultValue;
+            return options.TryGetValue(key, out var stringValue) && char.TryParse(stringValue, out var result) ? result : defaultValue;
         }
 
         public static string TryGetNotEmptyString(this IReadOnlyDictionary<string, string> options, string key, string defaultValue)

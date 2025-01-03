@@ -14,6 +14,15 @@ namespace QBittorrent.CommandLineInterface.Commands
         [Command(Description = "Shows the torrent pieces' hashes and states.")]
         public class Pieces : TorrentSpecificCommandBase
         {
+
+            public enum DisplayMode
+            {
+                Full,
+                Hashes,
+                States,
+                Diagram
+            }
+
             [Option("-d|--display <MODE>", "Display Mode (FULL|HASHES|STATES|DIAGRAM). FULL is default", CommandOptionType.SingleValue)]
             [EnumValidation(typeof(DisplayMode), AllowEmpty = true)]
             public string Display { get; set; }
@@ -47,7 +56,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     var width = (int)Math.Log10(hashes.Count) + 1;
                     var sequence = hashes.Zip(states, (hash, state) => (hash, state));
 
-                    int index = 0;
+                    var index = 0;
                     foreach (var (hash, state) in sequence)
                     {
                         console.WriteLineColored($"{(index++).ToString().PadLeft(width)}  {hash}  {state}", ColorScheme.Current.Normal);
@@ -59,7 +68,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     var hashes = await client.GetTorrentPiecesHashesAsync(Hash);
                     var width = (int)Math.Log10(hashes.Count) + 1;
 
-                    int index = 0;
+                    var index = 0;
                     foreach (var hash in hashes)
                     {
                         console.WriteLineColored($"{(index++).ToString().PadLeft(width)}  {hash}", ColorScheme.Current.Normal);
@@ -71,7 +80,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     var states = await client.GetTorrentPiecesStatesAsync(Hash);
                     var width = (int)Math.Log10(states.Count) + 1;
 
-                    int index = 0;
+                    var index = 0;
                     foreach (var state in states)
                     {
                         console.WriteLineColored($"{(index++).ToString().PadLeft(width)}  {state}", ColorScheme.Current.Normal);
@@ -94,12 +103,12 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                     var states = await client.GetTorrentPiecesStatesAsync(Hash);
                     var width = (int)Math.Log10(states.Count) + 1;
-                    var rowWidth = (Console.BufferWidth > 100 + width) ? 100 : 50;
+                    var rowWidth = Console.BufferWidth > 100 + width ? 100 : 50;
 
-                    for (int index = 0; index < states.Count; index += rowWidth)
+                    for (var index = 0; index < states.Count; index += rowWidth)
                     {
                         console.Write(index.ToString().PadLeft(width) + " ");
-                        for (int offset = 0; offset < rowWidth && index + offset < states.Count; offset++)
+                        for (var offset = 0; offset < rowWidth && index + offset < states.Count; offset++)
                         {
                             var state = (int)states[index + offset];
                             console.WriteColored(".", fgColors[state], bgColors[state]);
@@ -109,14 +118,6 @@ namespace QBittorrent.CommandLineInterface.Commands
                 }
 
                 return ExitCodes.Success;
-            }
-
-            public enum DisplayMode
-            {
-                Full,
-                Hashes,
-                States,
-                Diagram
             }
         }
     }

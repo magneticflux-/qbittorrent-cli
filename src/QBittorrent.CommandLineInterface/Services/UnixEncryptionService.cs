@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Mono.Unix;
@@ -52,10 +50,12 @@ namespace QBittorrent.CommandLineInterface.Services
                 aes.Padding = PaddingMode.PKCS7;
 
                 using (var outputStream = new MemoryStream())
-                using (var cryptoStream = new CryptoStream(inputStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
                 {
-                    cryptoStream.CopyTo(outputStream);
-                    return Encoding.UTF8.GetString(outputStream.ToArray());
+                    using (var cryptoStream = new CryptoStream(inputStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                    {
+                        cryptoStream.CopyTo(outputStream);
+                        return Encoding.UTF8.GetString(outputStream.ToArray());
+                    }
                 }
             }
         }

@@ -45,12 +45,12 @@ namespace QBittorrent.CommandLineInterface.Commands
                                 {
                                     Columns =
                                     {
-                                        new Column {Width = GridLength.Auto},
+                                        new Column {Width = GridLength.Auto}
                                     },
                                     Children =
                                     {
                                         UIHelper.Header("Tags"),
-                                        tags.Select(t => new[] { new Cell(t)})
+                                        tags.Select(t => new[] {new Cell(t)})
                                     },
                                     Stroke = LineThickness.Single
                                 })

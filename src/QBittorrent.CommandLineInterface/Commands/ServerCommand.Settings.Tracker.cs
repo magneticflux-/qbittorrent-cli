@@ -26,13 +26,13 @@ namespace QBittorrent.CommandLineInterface.Commands
                     [Argument(0, "URL_1 URL_2 ... URL_N", "The URLs of the trackers to be added.")]
                     [Required]
                     [Url]
-                    public List<string> Trackers { get; set; } 
+                    public List<string> Trackers { get; set; }
 
                     protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                     {
                         var prefs = await client.GetPreferencesAsync();
                         var currentTrackers = prefs.AdditinalTrackers ?? new List<string>();
-                        bool modified = false;
+                        var modified = false;
                         foreach (var tracker in Trackers)
                         {
                             if (!currentTrackers.Contains(tracker))
@@ -64,7 +64,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     {
                         var prefs = await client.GetPreferencesAsync();
                         var currentTrackers = prefs.AdditinalTrackers ?? new List<string>();
-                        bool modified = false;
+                        var modified = false;
                         foreach (var tracker in Trackers)
                         {
                             modified |= currentTrackers.Remove(tracker);
@@ -72,7 +72,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                         if (modified)
                         {
-                            prefs = new Preferences { AdditinalTrackers = currentTrackers };
+                            prefs = new Preferences {AdditinalTrackers = currentTrackers};
                             await client.SetPreferencesAsync(prefs);
                         }
 
@@ -85,7 +85,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 {
                     protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                     {
-                        var prefs = new Preferences { AdditinalTrackers = new string[0] };
+                        var prefs = new Preferences {AdditinalTrackers = new string[0]};
                         await client.SetPreferencesAsync(prefs);
                         return ExitCodes.Success;
                     }

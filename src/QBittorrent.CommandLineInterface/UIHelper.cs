@@ -21,13 +21,19 @@ namespace QBittorrent.CommandLineInterface
                 new Column {Width = GridLength.Star(1)}
             };
 
-        public static Cell Label(string text) => new Cell(text + ":") { Color = ColorScheme.Current.Strong.Foreground, Stroke = NoneStroke };
+        public static Cell Label(string text)
+        {
+            return new Cell(text + ":") {Color = ColorScheme.Current.Strong.Foreground, Stroke = NoneStroke};
+        }
 
-        public static Cell Data<T>(T data) => new Cell(data?.ToString()) { Stroke = NoneStroke, Padding = new Thickness(1, 0, 0, 0) };
+        public static Cell Data<T>(T data)
+        {
+            return new Cell(data?.ToString()) {Stroke = NoneStroke, Padding = new Thickness(1, 0, 0, 0)};
+        }
 
         public static Cell Header(string text, TextAlign? textAlign = null, int? minWidth = null)
         {
-            var cell = new Cell(text) { Stroke = GridHeaderStroke };
+            var cell = new Cell(text) {Stroke = GridHeaderStroke};
             cell.TextAlign = textAlign ?? cell.TextAlign;
             cell.MinWidth = minWidth ?? cell.MinWidth;
             return cell;
@@ -42,14 +48,14 @@ namespace QBittorrent.CommandLineInterface
                     dataCell = cell;
                     break;
                 case Element element:
-                    dataCell = new Cell(element) { Stroke = NoneStroke, Padding = new Thickness(1, 0, 0, 0) };
+                    dataCell = new Cell(element) {Stroke = NoneStroke, Padding = new Thickness(1, 0, 0, 0)};
                     break;
                 default:
                     dataCell = Data(data);
                     break;
             }
 
-            return new object[] { Label(label), dataCell };
+            return new object[] {Label(label), dataCell};
         }
 
         public static void PrintList<T>(IEnumerable<T> list,
@@ -93,8 +99,8 @@ namespace QBittorrent.CommandLineInterface
                         Stroke = NoneStroke,
                         Columns =
                         {
-                            new Column { Width = GridLength.Auto },
-                            new Column { Width = GridLength.Star(1) }
+                            new Column {Width = GridLength.Auto},
+                            new Column {Width = GridLength.Star(1)}
                         },
                         Children =
                         {
@@ -120,7 +126,7 @@ namespace QBittorrent.CommandLineInterface
                         }
                     }
 
-                    var value = (property.value == null && property.nullString != null)
+                    var value = property.value == null && property.nullString != null
                         ? property.nullString
                         : string.Format(property.format, property.value);
                     yield return (label, value);

@@ -54,14 +54,14 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 Console.CancelKeyPress += OnCancel;
 
-                int offset = Offset;
-                int remaining = Limit ?? int.MaxValue;
-                int limit = Math.Min(remaining, resultsPerRequest);
+                var offset = Offset;
+                var remaining = Limit ?? int.MaxValue;
+                var limit = Math.Min(remaining, resultsPerRequest);
 
                 var pager = UsePager ? new Pager() : null;
-                var target = (pager != null && pager.Enabled) ? new TextRenderTarget(pager.Writer) : null;
-                
-                int index = offset + 1;
+                var target = pager != null && pager.Enabled ? new TextRenderTarget(pager.Writer) : null;
+
+                var index = offset + 1;
 
                 try
                 {
@@ -89,7 +89,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 {
                     target?.Dispose();
                     pager?.Dispose();
-                    
+
                     Console.CancelKeyPress -= OnCancel;
                     await client.StopSearchAsync(id);
                     await client.DeleteSearchAsync(id);
@@ -103,7 +103,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         new Grid
                         {
                             Stroke = new LineThickness(LineWidth.None),
-                            Columns = { UIHelper.FieldsColumns },
+                            Columns = {UIHelper.FieldsColumns},
                             Children =
                             {
                                 UIHelper.Row("#", index),

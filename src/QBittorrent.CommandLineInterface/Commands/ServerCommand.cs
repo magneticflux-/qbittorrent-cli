@@ -47,8 +47,8 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 var apiVersion = await client.GetApiVersionAsync();
                 var timestampToDateTimeOffset = apiVersion < ApiVersion_2_8_18
-                    ? (Func<long, DateTimeOffset>) DateTimeOffset.FromUnixTimeMilliseconds
-                    : (Func<long, DateTimeOffset>) DateTimeOffset.FromUnixTimeSeconds;
+                    ? (Func<long, DateTimeOffset>)DateTimeOffset.FromUnixTimeMilliseconds
+                    : (Func<long, DateTimeOffset>)DateTimeOffset.FromUnixTimeSeconds;
 
                 var log = await client.GetLogAsync(severity, AfterId ?? -1);
                 foreach (var entry in log)
@@ -106,7 +106,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     new Grid
                     {
                         Stroke = UIHelper.NoneStroke,
-                        Columns = { UIHelper.FieldsColumns },
+                        Columns = {UIHelper.FieldsColumns},
                         Children =
                         {
                             UIHelper.Row("QBittorrent version", qVersion),
@@ -118,10 +118,10 @@ namespace QBittorrent.CommandLineInterface.Commands
                             UIHelper.Row("Qt version", build.QtVersion),
                             UIHelper.Row("Boost version", build.BoostVersion),
                             UIHelper.Row("OpenSSL version", build.OpenSslVersion),
-                            UIHelper.Row("ZLib version", build.ZlibVersion),
+                            UIHelper.Row("ZLib version", build.ZlibVersion)
                         }
                     }
-                 ).SetColors(ColorScheme.Current.Normal);
+                ).SetColors(ColorScheme.Current.Normal);
 
                 ConsoleRenderer.RenderDocument(doc);
 

@@ -17,6 +17,47 @@ namespace QBittorrent.CommandLineInterface.Commands
         [Subcommand(typeof(Reset))]
         public class Proxy
         {
+
+            public int OnExecute(CommandLineApplication app, IConsole console)
+            {
+                var networkSettings = SettingsService.Instance.GetNetwork();
+                var proxy = networkSettings.Proxy;
+                if (proxy == null)
+                {
+                    console.WriteLineColored("<not set>", ColorScheme.Current.Inactive);
+                }
+                else
+                {
+                    var doc = new Document(
+                        new Grid
+                        {
+                            Stroke = UIHelper.NoneStroke,
+                            Columns = {UIHelper.FieldsColumns},
+                            Children =
+                            {
+                                UIHelper.Row("Address", proxy.Address),
+                                UIHelper.Row("Username",
+                                    !string.IsNullOrEmpty(proxy.Username)
+                                        ? new Span(proxy.Username).SetColors(ColorScheme.Current.Normal)
+                                        : new Span("<not set>").SetColors(ColorScheme.Current.Inactive)),
+                                UIHelper.Row("Password",
+                                    proxy.Password != null
+                                        ? new Span("<encrypted>").SetColors(ColorScheme.Current.Active)
+                                        : new Span("<not set>").SetColors(ColorScheme.Current.Inactive)),
+                                UIHelper.Row("Bypass Local", proxy.BypassLocal),
+                                UIHelper.Row<Element>("Bypass",
+                                    proxy.Bypass?.Any() == true
+                                        ? new List(proxy.Bypass.Select(x => new Span(x)))
+                                        : new Span("<not set>").SetColors(ColorScheme.Current.Inactive))
+                            }
+                        }).SetColors(ColorScheme.Current.Normal);
+
+                    ConsoleRenderer.RenderDocument(doc);
+                }
+
+                return ExitCodes.Success;
+            }
+
             [Command(Description = "Configures proxy to use.")]
             public class Set
             {
@@ -79,46 +120,6 @@ namespace QBittorrent.CommandLineInterface.Commands
                     SettingsService.Instance.Save(networkSettings);
                     return ExitCodes.Success;
                 }
-            }
-
-            public int OnExecute(CommandLineApplication app, IConsole console)
-            {
-                var networkSettings = SettingsService.Instance.GetNetwork();
-                var proxy = networkSettings.Proxy;
-                if (proxy == null)
-                {
-                    console.WriteLineColored("<not set>", ColorScheme.Current.Inactive);
-                }
-                else
-                {
-                    var doc = new Document(
-                        new Grid
-                        {
-                            Stroke = UIHelper.NoneStroke,
-                            Columns = {UIHelper.FieldsColumns},
-                            Children =
-                            {
-                                UIHelper.Row("Address", proxy.Address),
-                                UIHelper.Row("Username",
-                                    !string.IsNullOrEmpty(proxy.Username)
-                                        ? new Span(proxy.Username).SetColors(ColorScheme.Current.Normal)
-                                        : new Span("<not set>").SetColors(ColorScheme.Current.Inactive)),
-                                UIHelper.Row("Password",
-                                    proxy.Password != null
-                                        ? new Span("<encrypted>").SetColors(ColorScheme.Current.Active)
-                                        : new Span("<not set>").SetColors(ColorScheme.Current.Inactive)),
-                                UIHelper.Row("Bypass Local", proxy.BypassLocal),
-                                UIHelper.Row("Bypass",
-                                    proxy.Bypass?.Any() == true
-                                        ? (Element) new List(proxy.Bypass.Select(x => new Span(x)))
-                                        : new Span("<not set>").SetColors(ColorScheme.Current.Inactive))
-                            }
-                        }).SetColors(ColorScheme.Current.Normal);
-
-                    ConsoleRenderer.RenderDocument(doc);
-                }
-
-                return ExitCodes.Success;
             }
         }
     }

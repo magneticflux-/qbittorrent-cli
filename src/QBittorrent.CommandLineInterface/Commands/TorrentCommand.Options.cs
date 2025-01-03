@@ -44,14 +44,14 @@ namespace QBittorrent.CommandLineInterface.Commands
                         new Grid
                         {
                             Stroke = UIHelper.NoneStroke,
-                            Columns = { UIHelper.FieldsColumns },
+                            Columns = {UIHelper.FieldsColumns},
                             Children =
                             {
                                 UIHelper.Row("Automatic Torrent Management", torrent.AutomaticTorrentManagement),
                                 UIHelper.Row("First/last piece prioritized", torrent.FirstLastPiecePrioritized),
                                 UIHelper.Row("Force start", torrent.ForceStart),
                                 UIHelper.Row("Sequential download", torrent.SequentialDownload),
-                                UIHelper.Row("Super seeding", torrent.SuperSeeding),
+                                UIHelper.Row("Super seeding", torrent.SuperSeeding)
                             }
                         }
                     ).SetColors(ColorScheme.Current.Normal);
@@ -124,8 +124,6 @@ namespace QBittorrent.CommandLineInterface.Commands
                     }
                 }
             }
-
-
         }
     }
 }

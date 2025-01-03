@@ -1,66 +1,156 @@
 ﻿{
   "$schema": "http://json-schema.org/draft-04/schema",
   "title": "JSON Schema for the qBittorrent CLI color scheme.",
-
   "type": "object",
   "definitions": {
     "color": {
-        "type": "string",
-        "enum": [ "black", "blue", "cyan", "dark-blue", "dark-cyan", "dark-gray", "dark-green", "dark-magenta", "dark-red", "dark-yellow", "gray", "green", "magenta", "red", "white", "yellow", "system-bg", "system-fg" ]
+      "type": "string",
+      "enum": [
+        "black",
+        "blue",
+        "cyan",
+        "dark-blue",
+        "dark-cyan",
+        "dark-gray",
+        "dark-green",
+        "dark-magenta",
+        "dark-red",
+        "dark-yellow",
+        "gray",
+        "green",
+        "magenta",
+        "red",
+        "white",
+        "yellow",
+        "system-bg",
+        "system-fg"
+      ]
     },
     "colors": {
       "type": "object",
       "properties": {
-        "bg": { "$ref": "#/definitions/color" }, 
-        "fg": { "$ref": "#/definitions/color" }, 
-        "fg-alt": { "$ref": "#/definitions/color" } 
+        "bg": {
+          "$ref": "#/definitions/color"
+        },
+        "fg": {
+          "$ref": "#/definitions/color"
+        },
+        "fg-alt": {
+          "$ref": "#/definitions/color"
+        }
       }
-    } 
+    }
   },
-
   "properties": {
-    "normal": { "$ref": "#/definitions/colors" },
-    "strong": { "$ref": "#/definitions/colors" },
-    "warning": { "$ref": "#/definitions/colors" },
-    "active": { "$ref": "#/definitions/colors" },
-    "inactive": { "$ref": "#/definitions/colors" },
+    "normal": {
+      "$ref": "#/definitions/colors"
+    },
+    "strong": {
+      "$ref": "#/definitions/colors"
+    },
+    "warning": {
+      "$ref": "#/definitions/colors"
+    },
+    "active": {
+      "$ref": "#/definitions/colors"
+    },
+    "inactive": {
+      "$ref": "#/definitions/colors"
+    },
     "log": {
       "type": "object",
       "properties": {
-        "status-normal": { "$ref": "#/definitions/colors" },
-        "status-info": { "$ref": "#/definitions/colors" },
-        "status-warning": { "$ref": "#/definitions/colors" },
-        "status-critical": { "$ref": "#/definitions/colors" },
-        "timestamp": { "$ref": "#/definitions/colors" },
-        "message": { "$ref": "#/definitions/colors" }
+        "status-normal": {
+          "$ref": "#/definitions/colors"
+        },
+        "status-info": {
+          "$ref": "#/definitions/colors"
+        },
+        "status-warning": {
+          "$ref": "#/definitions/colors"
+        },
+        "status-critical": {
+          "$ref": "#/definitions/colors"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/colors"
+        },
+        "message": {
+          "$ref": "#/definitions/colors"
+        }
       }
     },
     "torrent-status": {
       "type": "object",
       "properties": {
-        "error": { "$ref": "#/definitions/colors" },
-        "download": { "$ref": "#/definitions/colors" },
-        "upload": { "$ref": "#/definitions/colors" },
-        "paused-download": { "$ref": "#/definitions/colors" },
-        "paused-upload": { "$ref": "#/definitions/colors" },
-        "queued-download": { "$ref": "#/definitions/colors" },
-        "queued-upload": { "$ref": "#/definitions/colors" },
-        "queued-checking": { "$ref": "#/definitions/colors" },
-        "checking-download": { "$ref": "#/definitions/colors" },
-        "checking-upload": { "$ref": "#/definitions/colors" },
-        "checking-resume-data": { "$ref": "#/definitions/colors" },
-        "stalled-download": { "$ref": "#/definitions/colors" },
-        "stalled-upload": { "$ref": "#/definitions/colors" },
-        "forced-download": { "$ref": "#/definitions/colors" },
-        "forced-upload": { "$ref": "#/definitions/colors" },
-        "fetching-metadata": { "$ref": "#/definitions/colors" },
-        "missing-files": { "$ref": "#/definitions/colors" },
-        "allocating": { "$ref": "#/definitions/colors" },
-        "moving": { "$ref": "#/definitions/colors" }, 
-        "unknown": { "$ref": "#/definitions/colors" }
+        "error": {
+          "$ref": "#/definitions/colors"
+        },
+        "download": {
+          "$ref": "#/definitions/colors"
+        },
+        "upload": {
+          "$ref": "#/definitions/colors"
+        },
+        "paused-download": {
+          "$ref": "#/definitions/colors"
+        },
+        "paused-upload": {
+          "$ref": "#/definitions/colors"
+        },
+        "queued-download": {
+          "$ref": "#/definitions/colors"
+        },
+        "queued-upload": {
+          "$ref": "#/definitions/colors"
+        },
+        "queued-checking": {
+          "$ref": "#/definitions/colors"
+        },
+        "checking-download": {
+          "$ref": "#/definitions/colors"
+        },
+        "checking-upload": {
+          "$ref": "#/definitions/colors"
+        },
+        "checking-resume-data": {
+          "$ref": "#/definitions/colors"
+        },
+        "stalled-download": {
+          "$ref": "#/definitions/colors"
+        },
+        "stalled-upload": {
+          "$ref": "#/definitions/colors"
+        },
+        "forced-download": {
+          "$ref": "#/definitions/colors"
+        },
+        "forced-upload": {
+          "$ref": "#/definitions/colors"
+        },
+        "fetching-metadata": {
+          "$ref": "#/definitions/colors"
+        },
+        "missing-files": {
+          "$ref": "#/definitions/colors"
+        },
+        "allocating": {
+          "$ref": "#/definitions/colors"
+        },
+        "moving": {
+          "$ref": "#/definitions/colors"
+        },
+        "unknown": {
+          "$ref": "#/definitions/colors"
+        }
       }
     }
   },
-
-  "required": ["normal", "strong", "warning", "active", "inactive"]
+  "required": [
+    "normal",
+    "strong",
+    "warning",
+    "active",
+    "inactive"
+  ]
 }

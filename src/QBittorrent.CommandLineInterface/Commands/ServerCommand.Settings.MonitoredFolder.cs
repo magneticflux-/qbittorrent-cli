@@ -47,7 +47,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         var prefs = await client.GetPreferencesAsync();
                         var dirs = prefs?.ScanDirectories ?? new Dictionary<string, SaveLocation>();
                         dirs[Folder] = saveLocation;
-                        prefs = new Preferences { ScanDirectories = dirs };
+                        prefs = new Preferences {ScanDirectories = dirs};
                         await client.SetPreferencesAsync(prefs);
                         return ExitCodes.Success;
 
@@ -81,7 +81,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         var prefs = await client.GetPreferencesAsync();
                         var dirs = prefs?.ScanDirectories ?? new Dictionary<string, SaveLocation>();
                         dirs.Remove(Folder);
-                        prefs = new Preferences { ScanDirectories = dirs };
+                        prefs = new Preferences {ScanDirectories = dirs};
                         await client.SetPreferencesAsync(prefs);
                         return ExitCodes.Success;
                     }
@@ -92,7 +92,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 {
                     protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                     {
-                        var prefs = new Preferences { ScanDirectories = new Dictionary<string, SaveLocation>() };
+                        var prefs = new Preferences {ScanDirectories = new Dictionary<string, SaveLocation>()};
                         await client.SetPreferencesAsync(prefs);
                         return ExitCodes.Success;
                     }

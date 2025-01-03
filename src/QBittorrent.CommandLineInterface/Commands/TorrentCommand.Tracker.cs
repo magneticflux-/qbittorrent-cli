@@ -45,7 +45,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                                     new Column {Width = GridLength.Star(1)},
                                     new Column {Width = GridLength.Auto},
                                     new Column {Width = GridLength.Auto},
-                                    new Column {Width = GridLength.Auto},
+                                    new Column {Width = GridLength.Auto}
                                 },
                                 Children =
                                 {
@@ -58,7 +58,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                                         new Cell(c.Url),
                                         new Cell(c.Status),
                                         new Cell(c.Seeds),
-                                        new Cell(c.Leeches),
+                                        new Cell(c.Leeches)
                                     })
                                 },
                                 Stroke = LineThickness.Single

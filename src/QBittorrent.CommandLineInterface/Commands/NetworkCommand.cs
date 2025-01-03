@@ -9,6 +9,13 @@ namespace QBittorrent.CommandLineInterface.Commands
     [Subcommand(typeof(Settings))]
     public partial class NetworkCommand
     {
+
+        public int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            app.ShowHelp();
+            return ExitCodes.WrongUsage;
+        }
+
         [Command(Description = "Configure network settings.")]
         public class Settings
         {
@@ -28,7 +35,7 @@ namespace QBittorrent.CommandLineInterface.Commands
             {
                 var net = SettingsService.Instance.GetNetwork();
 
-                bool hasChanges = false;
+                var hasChanges = false;
 
                 if (UseDefaultCredentials.HasValue)
                 {
@@ -68,12 +75,5 @@ namespace QBittorrent.CommandLineInterface.Commands
                 return ExitCodes.Success;
             }
         }
-
-        public int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            app.ShowHelp();
-            return ExitCodes.WrongUsage;
-        }
     }
 }
-

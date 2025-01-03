@@ -25,10 +25,10 @@ namespace QBittorrent.CommandLineInterface.ColorSchemes
 
         public ConsoleColor GetEffectiveForeground()
         {
-            ConsoleColor bg = GetEffectiveBackground();
-            ConsoleColor systemFg = GetSystemForeground();
-            ConsoleColor fg = Foreground ?? systemFg;
-            return fg != bg ? fg : (AltForeground ?? systemFg);
+            var bg = GetEffectiveBackground();
+            var systemFg = GetSystemForeground();
+            var fg = Foreground ?? systemFg;
+            return fg != bg ? fg : AltForeground ?? systemFg;
         }
 
         private ConsoleColor GetSystemBackground()

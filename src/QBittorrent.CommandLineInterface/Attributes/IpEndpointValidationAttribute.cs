@@ -20,8 +20,8 @@ namespace QBittorrent.CommandLineInterface.Attributes
 
         private static bool TryParse(ReadOnlySpan<char> s, out IPEndPoint result)
         {
-            int addressLength = s.Length;  // If there's no port then send the entire string to the address parser
-            int lastColonPos = s.LastIndexOf(':');
+            var addressLength = s.Length; // If there's no port then send the entire string to the address parser
+            var lastColonPos = s.LastIndexOf(':');
 
             // Look to see if this is an IPv6 address with a port.
             if (lastColonPos > 0)
@@ -41,7 +41,7 @@ namespace QBittorrent.CommandLineInterface.Attributes
             {
                 uint port = 0;
                 if (addressLength == s.Length ||
-                    (uint.TryParse(s.Slice(addressLength + 1), NumberStyles.None, CultureInfo.InvariantCulture, out port) && port <= IPEndPoint.MaxPort))
+                    uint.TryParse(s.Slice(addressLength + 1), NumberStyles.None, CultureInfo.InvariantCulture, out port) && port <= IPEndPoint.MaxPort)
 
                 {
                     result = new IPEndPoint(address, (int)port);

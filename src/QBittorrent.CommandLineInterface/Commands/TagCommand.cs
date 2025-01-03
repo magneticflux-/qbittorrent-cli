@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Alba.CsConsoleFormat;
 using McMaster.Extensions.CommandLineUtils;
@@ -64,12 +63,12 @@ namespace QBittorrent.CommandLineInterface.Commands
                             {
                                 Columns =
                                 {
-                                    new Column {Width = GridLength.Auto},
+                                    new Column {Width = GridLength.Auto}
                                 },
                                 Children =
                                 {
                                     UIHelper.Header("Tags"),
-                                    tags.Select(t => new[] { new Cell(t)})
+                                    tags.Select(t => new[] {new Cell(t)})
                                 },
                                 Stroke = LineThickness.Single
                             })

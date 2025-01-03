@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Newtonsoft.Json;
-using QBittorrent.CommandLineInterface.Converters;
 
 namespace QBittorrent.CommandLineInterface.Formats
 {
     public class ListFormatter<T>
     {
-        private readonly Action<IEnumerable<T>> _printTable;
         private readonly Action<IEnumerable<T>> _printList;
+        private readonly Action<IEnumerable<T>> _printTable;
 
         public ListFormatter(Action<IEnumerable<T>> printTable, Action<IEnumerable<T>> printList)
         {

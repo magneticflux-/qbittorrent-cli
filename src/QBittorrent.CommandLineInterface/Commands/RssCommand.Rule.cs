@@ -195,7 +195,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     }
                 }
             }
-            
+
             [Command(Description = "Renames RSS automatic downloading rule.", ExtendedHelpText = ExperimentalHelpText)]
             public class Rename : AuthenticatedCommandBase
             {
@@ -238,9 +238,11 @@ namespace QBittorrent.CommandLineInterface.Commands
                     CustomFormatters = new Dictionary<string, Func<object, object>>
                     {
                         [nameof(RssRuleViewModel.AffectedFeeds)] = FormatAffectedFeeds,
-                        [nameof(RssRuleViewModel.PreviouslyMatchedEpisodes)] = FormatPreviouslyMatchedEpisodes,
+                        [nameof(RssRuleViewModel.PreviouslyMatchedEpisodes)] = FormatPreviouslyMatchedEpisodes
                     };
                 }
+
+                protected override IReadOnlyDictionary<string, Func<object, object>> ListCustomFormatters => CustomFormatters;
 
                 protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                 {
@@ -257,7 +259,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                                 Columns =
                                 {
                                     new Column {Width = GridLength.Star(1)},
-                                    new Column {Width = GridLength.Auto},
+                                    new Column {Width = GridLength.Auto}
                                 },
                                 Children =
                                 {
@@ -275,8 +277,6 @@ namespace QBittorrent.CommandLineInterface.Commands
                     ConsoleRenderer.RenderDocument(doc);
                 }
 
-                protected override IReadOnlyDictionary<string, Func<object, object>> ListCustomFormatters => CustomFormatters;
-
                 private static object FormatAffectedFeeds(object obj)
                 {
                     if (!(obj is IReadOnlyList<Uri> feeds))
@@ -291,7 +291,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 private static object FormatPreviouslyMatchedEpisodes(object obj)
                 {
                     if (!(obj is IReadOnlyList<string> episodes))
-                       return null;
+                        return null;
 
                     return new Alba.CsConsoleFormat.List(episodes.Where(e => !string.IsNullOrEmpty(e)));
                 }

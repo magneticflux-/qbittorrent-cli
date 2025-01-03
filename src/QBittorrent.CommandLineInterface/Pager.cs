@@ -9,17 +9,17 @@ using McMaster.Extensions.CommandLineUtils;
 namespace QBittorrent.CommandLineInterface
 {
     /// <summary>
-    /// Process access to a console pager, which supports scrolling and search.
+    ///     Process access to a console pager, which supports scrolling and search.
     /// </summary>
     public class Pager : IDisposable
     {
-        private string _prompt = "Use arrow keys to scroll\\. Press 'q' to exit\\.";
-        private readonly Lazy<Process> _less;
         private readonly TextWriter _fallbackWriter;
+        private readonly Lazy<Process> _less;
         private bool _disposed;
+        private string _prompt = "Use arrow keys to scroll\\. Press 'q' to exit\\.";
 
         public Pager()
-          : this(PhysicalConsole.Singleton)
+            : this(PhysicalConsole.Singleton)
         {
         }
 
@@ -31,15 +31,18 @@ namespace QBittorrent.CommandLineInterface
             _less = new Lazy<Process>(CreateWriter);
             _fallbackWriter = console.Out;
 
-            bool PagerExists() => !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) 
-                                  || File.Exists(GetPagerPath());
+            bool PagerExists()
+            {
+                return !RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                    || File.Exists(GetPagerPath());
+            }
         }
 
         public bool Enabled { get; private set; }
 
         /// <summary>
-        /// The prompt to display at the bottom of the pager.
-        /// <seealso href="https://www.computerhope.com/unix/uless.htm#Prompts" /> for details.
+        ///     The prompt to display at the bottom of the pager.
+        ///     <seealso href="https://www.computerhope.com/unix/uless.htm#Prompts" /> for details.
         /// </summary>
         public string Prompt
         {
@@ -53,12 +56,13 @@ namespace QBittorrent.CommandLineInterface
         }
 
         /// <summary>
-        /// <para>
-        /// Gets an object which can be used to write text into the pager.
-        /// </para>
-        /// <para>
-        /// This fallback to <see cref="P:McMaster.Extensions.CommandLineUtils.IConsole.Out" /> if the pager is not available.
-        /// </para>
+        ///     <para>
+        ///         Gets an object which can be used to write text into the pager.
+        ///     </para>
+        ///     <para>
+        ///         This fallback to <see cref="P:McMaster.Extensions.CommandLineUtils.IConsole.Out" /> if the pager is not
+        ///         available.
+        ///     </para>
         /// </summary>
         public TextWriter Writer
         {
@@ -68,6 +72,22 @@ namespace QBittorrent.CommandLineInterface
                     throw new ObjectDisposedException(nameof(Pager));
                 return _less.Value?.StandardInput ?? _fallbackWriter;
             }
+        }
+
+        /// <summary>This will wait until the user exits the pager.</summary>
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+            _disposed = true;
+            if (!_less.IsValueCreated)
+                return;
+            var process = _less.Value;
+            if (process == null)
+                return;
+            process.StandardInput.Dispose();
+            process.WaitForExit();
+            process.Dispose();
         }
 
         /// <summary>This will wait until the user exits the pager.</summary>
@@ -88,14 +108,15 @@ namespace QBittorrent.CommandLineInterface
         {
             if (!Enabled)
                 return null;
-            List<string> stringList = new List<string>
+            var stringList = new List<string>
             {
                 "-K",
                 "--prompt=" + Prompt
             };
-            Process process = new Process
+            var process = new Process
             {
-                StartInfo = {
+                StartInfo =
+                {
                     FileName = GetPagerPath(),
                     Arguments = ArgumentEscaper.EscapeAndConcatenate(stringList),
                     RedirectStandardInput = true
@@ -115,27 +136,16 @@ namespace QBittorrent.CommandLineInterface
             }
         }
 
-        /// <summary>This will wait until the user exits the pager.</summary>
-        public void Dispose()
+        private string GetPagerPath()
         {
-            if (_disposed)
-                return;
-            _disposed = true;
-            if (!_less.IsValueCreated)
-                return;
-            Process process = _less.Value;
-            if (process == null)
-                return;
-            process.StandardInput.Dispose();
-            process.WaitForExit();
-            process.Dispose();
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? Path.Combine(GetStartupPath(), "utils", "less", "less.exe")
+                : "less";
         }
 
-        private string GetPagerPath() => RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? Path.Combine(GetStartupPath(), "utils", "less", "less.exe")
-            : "less";
-
-        private string GetStartupPath() => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
+        private string GetStartupPath()
+        {
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        }
     }
 }

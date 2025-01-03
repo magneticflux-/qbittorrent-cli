@@ -41,7 +41,7 @@ namespace QBittorrent.CommandLineInterface.ViewModels.ServerPreferences
 
         [Display(Name = "  On day")]
         public SchedulerDay? SchedulerDays => _wrappedObject.SchedulerDays;
-        
+
         [Display(Name = "Apply rate limit to uTP protocol")]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public bool? LimitUTPRate => _wrappedObject.LimitUTPRate;
@@ -52,7 +52,7 @@ namespace QBittorrent.CommandLineInterface.ViewModels.ServerPreferences
         [Display(Name = "Apply rate limit to peers on LAN")]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public bool? LimitLAN => _wrappedObject.LimitLAN;
-        
+
         private DateTime? ToDateTime(in int? hours, in int? minutes)
         {
             if (hours == null || minutes == null)

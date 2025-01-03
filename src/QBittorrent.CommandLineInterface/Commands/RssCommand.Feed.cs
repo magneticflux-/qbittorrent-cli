@@ -27,7 +27,7 @@ namespace QBittorrent.CommandLineInterface.Commands
             {
                 protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                 {
-                    var root = await client.GetRssItemsAsync(false);
+                    var root = await client.GetRssItemsAsync();
 
                     var doc = new Document(RenderItem(root, true, true)).SetColors(ColorScheme.Current.Normal);
                     ConsoleRenderer.RenderDocument(doc);
@@ -54,24 +54,22 @@ namespace QBittorrent.CommandLineInterface.Commands
                         {
                             Columns =
                             {
-                                new Column { Width = GridLength.Char(2) },
-                                new Column { Width = GridLength.Star(1) }
+                                new Column {Width = GridLength.Char(2)},
+                                new Column {Width = GridLength.Star(1)}
                             },
                             Children =
                             {
-                                new object[]
                                 {
                                     new Cell(isRoot
                                         ? "<R"
-                                        : last ? "\u2514\u2500" : "\u251c\u2500") { Stroke = LineThickness.None },
-                                    new Cell(isRoot 
-                                        ? "oot>" 
-                                        : item is RssFeed feed ? RenderFeed(feed) : item.Name) { Stroke = LineThickness.None }
+                                        : last ? "\u2514\u2500" : "\u251c\u2500") {Stroke = LineThickness.None},
+                                    new Cell(isRoot
+                                        ? "oot>"
+                                        : item is RssFeed feed ? RenderFeed(feed) : item.Name) {Stroke = LineThickness.None}
                                 },
-                                new object[] 
                                 {
-                                    new Cell(folder == null || last ? null : new Separator { Orientation = Orientation.Vertical }) { Stroke = LineThickness.None },
-                                    new Cell(folder == null ? null : RenderFolderContent(folder)) { Stroke = LineThickness.None }
+                                    new Cell(folder == null || last ? null : new Separator {Orientation = Orientation.Vertical}) {Stroke = LineThickness.None},
+                                    new Cell(folder == null ? null : RenderFolderContent(folder)) {Stroke = LineThickness.None}
                                 }
                             },
                             Stroke = LineThickness.None
@@ -176,7 +174,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 private RssFeed GetFeedByPath(RssFolder folder, string path)
                 {
-                    var segments = new Queue<string>(Path.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries));
+                    var segments = new Queue<string>(Path.Split(new[] {'\\'}, StringSplitOptions.RemoveEmptyEntries));
 
                     while (segments.Count > 1)
                     {

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Resources;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,12 +15,6 @@ namespace QBittorrent.CommandLineInterface.ColorSchemes
         private const string SchemaResource = "QBittorrent.CommandLineInterface.Schemas.colors-schema.json";
         private const string DarkResource = "QBittorrent.CommandLineInterface.ColorSchemes.dark.json";
         private const string LightResource = "QBittorrent.CommandLineInterface.ColorSchemes.light.json";
-
-        // ReSharper disable InconsistentNaming
-        private static readonly Lazy<ColorScheme> _dark;
-        private static readonly Lazy<ColorScheme> _light;
-        private static readonly Lazy<ColorScheme> _default;
-        // ReSharper restore InconsistentNaming
 
         private static ColorScheme _current;
 
@@ -109,5 +101,11 @@ namespace QBittorrent.CommandLineInterface.ColorSchemes
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
+
+        // ReSharper disable InconsistentNaming
+        private static readonly Lazy<ColorScheme> _dark;
+        private static readonly Lazy<ColorScheme> _light;
+        private static readonly Lazy<ColorScheme> _default;
+        // ReSharper restore InconsistentNaming
     }
 }

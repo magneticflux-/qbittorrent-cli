@@ -69,7 +69,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 [NoAutoSet]
                 public string CertificateKeyPassword { get; set; }
 
-                [Option("-C|--cert-path <PATH>", 
+                [Option("-C|--cert-path <PATH>",
                     "X509 certificate path on the server machine. The certificate can be in PEM (.pem, .crt, .cer) format. For qBittorrent 4.2 or later.",
                     CommandOptionType.SingleValue)]
                 [MinApiVersion("2.3.0", "--cert-path option requires qBittorrent 4.2.0 or later. Use --cert option instead.")]
@@ -89,8 +89,8 @@ namespace QBittorrent.CommandLineInterface.Commands
                 [MinApiVersion("2.2.0", "Alternative Web UI requires qBittorrent 4.1.5 or later.")]
                 public string AlternativeWebUIPath { get; set; }
 
-                [Option("-S|--secure-cookie <BOOL>", 
-                    "Set Secure attribute on cookie when using HTTPS. Requires qBittorrent 4.2.2 or later.", 
+                [Option("-S|--secure-cookie <BOOL>",
+                    "Set Secure attribute on cookie when using HTTPS. Requires qBittorrent 4.2.2 or later.",
                     CommandOptionType.SingleValue)]
                 [MinApiVersion("2.4.1", "--secure-cookie option requires qBittorrent 4.2.2 or later.")]
                 public bool? WebUISecureCookie { get; set; }
@@ -113,7 +113,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     CommandOptionType.SingleValue)]
                 [MinApiVersion("2.5.1", "--secure-cookie option requires qBittorrent 4.2.5 or later.")]
                 public bool? WebUICustomHttpHeadersEnabled { get; set; }
-                
+
                 [Option("-H|--custom-http-header <HEADER>",
                     "Custom HTTP header for Web UI. Use a colon (:) as a separator between header name and value. " +
                     "This option can be repeated in order to set several headers. " +
@@ -121,6 +121,14 @@ namespace QBittorrent.CommandLineInterface.Commands
                     CommandOptionType.MultipleValue)]
                 [MinApiVersion("2.5.1", "--secure-cookie option requires qBittorrent 4.2.5 or later.")]
                 public IList<string> WebUICustomHttpHeaders { get; set; }
+
+                protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters =>
+                    new Dictionary<string, Func<object, object>>
+                    {
+                        [nameof(WebInterfaceViewModel.Locale)] = FormatLanguage,
+                        [nameof(WebInterfaceViewModel.WebUISslCertificate)] = FormatCertificate,
+                        [nameof(WebInterfaceViewModel.WebUICustomHttpHeaders)] = FormatCustomHttpHeaders
+                    };
 
                 protected override async Task Prepare(QBittorrentClient client, CommandLineApplication app, IConsole console)
                 {
@@ -149,18 +157,13 @@ namespace QBittorrent.CommandLineInterface.Commands
                             break;
                     }
 
-                    IPasswordFinder GetPasswordFinder() => CertificateKeyPassword != null
-                        ? new PredefinedPasswordFinder(CertificateKeyPassword)
-                        : (IPasswordFinder)new ConsolePasswordFinder(console);
-                }
-
-                protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters => 
-                    new Dictionary<string, Func<object, object>>
+                    IPasswordFinder GetPasswordFinder()
                     {
-                        [nameof(WebInterfaceViewModel.Locale)] = FormatLanguage,
-                        [nameof(WebInterfaceViewModel.WebUISslCertificate)] = FormatCertificate,
-                        [nameof(WebInterfaceViewModel.WebUICustomHttpHeaders)] = FormatCustomHttpHeaders
-                    };
+                        return CertificateKeyPassword != null
+                            ? new PredefinedPasswordFinder(CertificateKeyPassword)
+                            : new ConsolePasswordFinder(console);
+                    }
+                }
 
                 private string FormatLanguage(object arg)
                 {
@@ -187,7 +190,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     var stack = new Stack(certs.Select(cert => new Grid
                     {
                         Stroke = new LineThickness(LineWidth.Single),
-                        Columns = { UIHelper.FieldsColumns },
+                        Columns = {UIHelper.FieldsColumns},
                         Children =
                         {
                             UIHelper.Row("Serial number", cert.SerialNumber),
@@ -251,7 +254,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         return WritePrivateKeys(privateKeys);
                     }
 
-                    
+
                     IEnumerable<AsymmetricKeyParameter> ReadPrivateKeys(IPasswordFinder pf)
                     {
                         using (var input = File.OpenText(CertificateKeyPath))
@@ -281,7 +284,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 }
 
                 private IEnumerable<T> ReadPemObjects<T>(StreamReader input, IPasswordFinder passwordFinder = null)
-                { 
+                {
                     var reader = new PemReader(input, passwordFinder);
                     do
                     {
@@ -313,7 +316,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         var keyWriter = new PemWriter(keyOutput);
                         var store = new Pkcs12StoreBuilder().Build();
                         store.Load(input, passwordFinder.GetPassword());
-                        foreach (string alias in store.Aliases)
+                        foreach (var alias in store.Aliases)
                         {
                             var cert = store.GetCertificate(alias);
                             if (cert != null)
@@ -338,7 +341,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         return CertificateFileType.None;
 
                     var ext = Path.GetExtension(CertificatePath).ToLowerInvariant();
-                    return (ext == ".pfx" || ext == ".p12")
+                    return ext == ".pfx" || ext == ".p12"
                         ? CertificateFileType.Pfx
                         : CertificateFileType.Pem;
                 }
@@ -354,20 +357,32 @@ namespace QBittorrent.CommandLineInterface.Commands
                 {
                     private readonly string _password;
 
-                    public PredefinedPasswordFinder(string password) => _password = password;
+                    public PredefinedPasswordFinder(string password)
+                    {
+                        _password = password;
+                    }
 
-                    public char[] GetPassword() => _password.ToCharArray();
+                    public char[] GetPassword()
+                    {
+                        return _password.ToCharArray();
+                    }
                 }
 
                 private class ConsolePasswordFinder : IPasswordFinder
                 {
                     private readonly IConsole _console;
 
-                    public ConsolePasswordFinder(IConsole console) => _console = console;
+                    public ConsolePasswordFinder(IConsole console)
+                    {
+                        _console = console;
+                    }
 
-                    public char[] GetPassword() => _console.IsInputRedirected
-                        ? _console.In.ReadLine()?.ToCharArray()
-                        : Prompt.GetPassword("Private key password:")?.ToCharArray();
+                    public char[] GetPassword()
+                    {
+                        return _console.IsInputRedirected
+                            ? _console.In.ReadLine()?.ToCharArray()
+                            : Prompt.GetPassword("Private key password:")?.ToCharArray();
+                    }
                 }
 
                 #endregion

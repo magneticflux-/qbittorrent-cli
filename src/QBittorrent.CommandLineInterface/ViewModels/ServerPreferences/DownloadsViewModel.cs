@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using QBittorrent.Client;
 
 namespace QBittorrent.CommandLineInterface.ViewModels.ServerPreferences
 {
     public readonly struct DownloadsViewModel
     {
-        private readonly Client.Preferences _wrappedObject;
+        private readonly Preferences _wrappedObject;
 
-        public DownloadsViewModel(Client.Preferences wrappedObject)
+        public DownloadsViewModel(Preferences wrappedObject)
         {
             _wrappedObject = wrappedObject;
         }
@@ -18,7 +17,7 @@ namespace QBittorrent.CommandLineInterface.ViewModels.ServerPreferences
 
         [Display(Name = "Incompleted file path enabled")]
         public bool? TempPathEnabled => _wrappedObject.TempPathEnabled;
-        
+
         [Display(Name = "Incompleted file path")]
         public string TempPath => _wrappedObject.TempPath;
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using QBittorrent.CommandLineInterface.Converters;
@@ -11,6 +10,16 @@ namespace QBittorrent.CommandLineInterface.Services
 {
     public class NetworkSettings
     {
+
+        public enum AuthType
+        {
+            Basic,
+            Digest,
+            Ntlm,
+            Negotiate,
+            Kerberos
+        }
+
         public bool UseDefaultCredentials { get; set; }
 
         public bool IgnoreCertificateErrors { get; set; }
@@ -51,16 +60,10 @@ namespace QBittorrent.CommandLineInterface.Services
 
             public string Domain { get; set; }
 
-            public NetworkCredential ToCredential() => new NetworkCredential(Username, Password, Domain ?? string.Empty);
-        }
-
-        public enum AuthType
-        {
-            Basic,
-            Digest,
-            Ntlm,
-            Negotiate,
-            Kerberos
+            public NetworkCredential ToCredential()
+            {
+                return new NetworkCredential(Username, Password, Domain ?? string.Empty);
+            }
         }
     }
 }

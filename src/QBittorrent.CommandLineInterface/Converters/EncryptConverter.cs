@@ -27,7 +27,7 @@ namespace QBittorrent.CommandLineInterface.Converters
 
             if (reader.TokenType == JsonToken.String)
             {
-                return EncryptionService.Instance.Decrypt((string) reader.Value);
+                return EncryptionService.Instance.Decrypt((string)reader.Value);
             }
 
             throw new JsonSerializationException($"Unexpected token {reader.TokenType}.");

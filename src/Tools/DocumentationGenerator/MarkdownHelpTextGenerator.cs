@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using McMaster.Extensions.CommandLineUtils;
 using McMaster.Extensions.CommandLineUtils.HelpText;
 
@@ -11,7 +10,7 @@ namespace DocumentationGenerator
     public class MarkdownHelpTextGenerator : IHelpTextGenerator
     {
         /// <summary>
-        /// Determines if commands are ordered by name in generated help text
+        ///     Determines if commands are ordered by name in generated help text
         /// </summary>
         public bool SortCommandsByName { get; set; } = true;
 
@@ -43,7 +42,7 @@ namespace DocumentationGenerator
         }
 
         /// <summary>
-        /// Generate the first few lines of help output text
+        ///     Generate the first few lines of help output text
         /// </summary>
         /// <param name="application">The app</param>
         /// <param name="output">Help text output</param>
@@ -55,7 +54,7 @@ namespace DocumentationGenerator
 
             output.Write("## ");
             var parts = EnumerateCommandParts(application).ToList();
-            for (int i = 0; i < parts.Count - 1; i++)
+            for (var i = 0; i < parts.Count - 1; i++)
             {
                 var part = parts[i];
                 var link = string.Join('-', parts.Take(i + 1));
@@ -73,7 +72,7 @@ namespace DocumentationGenerator
         }
 
         /// <summary>
-        /// Generate detailed help information
+        ///     Generate detailed help information
         /// </summary>
         /// <param name="application">The application</param>
         /// <param name="output">Help text output</param>
@@ -98,7 +97,7 @@ namespace DocumentationGenerator
         }
 
         /// <summary>
-        /// Generate the line that shows usage
+        ///     Generate the line that shows usage
         /// </summary>
         /// <param name="application">The app</param>
         /// <param name="output">Help text output</param>
@@ -146,7 +145,7 @@ namespace DocumentationGenerator
         }
 
         /// <summary>
-        /// Generate the lines that show information about arguments
+        ///     Generate the lines that show information about arguments
         /// </summary>
         /// <param name="application">The app</param>
         /// <param name="output">Help text output</param>
@@ -176,7 +175,7 @@ namespace DocumentationGenerator
         }
 
         /// <summary>
-        /// Generate the lines that show information about options
+        ///     Generate the lines that show information about options
         /// </summary>
         /// <param name="application">The app</param>
         /// <param name="output">Help text output</param>
@@ -206,7 +205,7 @@ namespace DocumentationGenerator
         }
 
         /// <summary>
-        /// Generate the lines that show information about subcommands
+        ///     Generate the lines that show information about subcommands
         /// </summary>
         /// <param name="application">The app</param>
         /// <param name="output">Help text output</param>
@@ -250,7 +249,7 @@ namespace DocumentationGenerator
         }
 
         /// <summary>
-        /// Generate the last lines of help text output
+        ///     Generate the last lines of help text output
         /// </summary>
         /// <param name="application">The app</param>
         /// <param name="output">Help text output</param>
@@ -271,13 +270,13 @@ namespace DocumentationGenerator
         }
 
         /// <summary>
-        /// Generates the template string in the format "-{Symbol}|-{Short}|--{Long} &lt;{Value}&gt;" for display in help text.
+        ///     Generates the template string in the format "-{Symbol}|-{Short}|--{Long} &lt;{Value}&gt;" for display in help text.
         /// </summary>
         /// <returns>The template string</returns>
         protected virtual string Format(CommandOption option)
         {
             var value = GetValueName();
-            var parts = new []
+            var parts = new[]
             {
                 GetOptionName("--", option.LongName),
                 GetOptionName("-", option.ShortName),
@@ -300,10 +299,7 @@ namespace DocumentationGenerator
                 {
                     return $"[`*`:<{option.ValueName}>`*`]";
                 }
-                else
-                {
-                    return $" `*`<{option.ValueName}>`*` ";
-                }
+                return $" `*`<{option.ValueName}>`*` ";
             }
         }
 

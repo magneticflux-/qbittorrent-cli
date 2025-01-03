@@ -16,7 +16,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
         public virtual string Format { get; set; }
 
-        protected virtual IReadOnlyDictionary<string, Func<object, object>> ListCustomFormatters => null;
+        protected virtual Dictionary<string, Func<object?, object?>>? ListCustomFormatters => null;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void Print(IEnumerable<T> data, bool preferList = false)

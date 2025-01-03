@@ -30,7 +30,7 @@ namespace QBittorrent.CommandLineInterface.Services
             using (var textReader = file.OpenText())
             using (var jsonReader = new JsonTextReader(textReader))
             {
-                return serializer.Deserialize<GeneralSettings>(jsonReader);
+                return serializer.Deserialize<GeneralSettings>(jsonReader) ?? throw new InvalidOperationException();
             }
         }
 
@@ -48,22 +48,22 @@ namespace QBittorrent.CommandLineInterface.Services
             using (var textReader = file.OpenText())
             using (var jsonReader = new JsonTextReader(textReader))
             {
-                return serializer.Deserialize<NetworkSettings>(jsonReader);
+                return serializer.Deserialize<NetworkSettings>(jsonReader) ?? throw new InvalidOperationException();
             }
 
-            ProxySettings GetLegacyProxySettings(GeneralSettings settings)
+            ProxySettings? GetLegacyProxySettings(GeneralSettings settings)
             {
                 return settings.Other != null && settings.Other.TryGetValue("Proxy", out var jtoken)
                     ? jtoken.ToObject<ProxySettings>()
                     : null;
             }
 
-            NetworkSettings GetLegacyNetworkSettings(GeneralSettings settings, ProxySettings proxy)
+            NetworkSettings GetLegacyNetworkSettings(GeneralSettings settings, ProxySettings? proxy)
             {
                 if (settings.Other == null || !settings.Other.TryGetValue("NetworkSettings", out var jtoken))
                     return new NetworkSettings();
 
-                var networkSettings = jtoken.ToObject<NetworkSettings>();
+                var networkSettings = jtoken.ToObject<NetworkSettings>() ?? throw new InvalidOperationException();
                 networkSettings.Proxy = proxy;
                 return networkSettings;
             }
@@ -78,8 +78,9 @@ namespace QBittorrent.CommandLineInterface.Services
             var serializer = new JsonSerializer();
             using (var stream = file.Open(FileMode.Create, FileAccess.Write))
             using (var textWriter = new StreamWriter(stream, Encoding.UTF8))
-            using (var jsonWriter = new JsonTextWriter(textWriter) {Formatting = Formatting.Indented})
+            using (var jsonWriter = new JsonTextWriter(textWriter))
             {
+                jsonWriter.Formatting = Formatting.Indented;
                 serializer.Serialize(jsonWriter, generalSettings);
             }
         }
@@ -93,8 +94,9 @@ namespace QBittorrent.CommandLineInterface.Services
             var serializer = new JsonSerializer();
             using (var stream = file.Open(FileMode.Create, FileAccess.Write))
             using (var textWriter = new StreamWriter(stream, Encoding.UTF8))
-            using (var jsonWriter = new JsonTextWriter(textWriter) {Formatting = Formatting.Indented})
+            using (var jsonWriter = new JsonTextWriter(textWriter))
             {
+                jsonWriter.Formatting = Formatting.Indented;
                 serializer.Serialize(jsonWriter, settings);
             }
         }

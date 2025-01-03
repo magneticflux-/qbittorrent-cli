@@ -25,7 +25,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
             if (!IsAll)
             {
-                IReadOnlyList<TorrentInfo> torrents = null;
+                IReadOnlyList<TorrentInfo>? torrents = null;
                 for (var hashIndex = Hashes.Count - 1; hashIndex >= 0; hashIndex--)
                 {
                     var hash = Hashes[hashIndex];
@@ -55,7 +55,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                                 var torrent = matching[i];
                                 var name = torrent.Name.Length < nameWidth
                                     ? torrent.Name
-                                    : torrent.Name.Substring(0, nameWidth - 3) + "...";
+                                    : torrent.Name[..(nameWidth - 3)] + "...";
                                 console.WriteLineColored($"[{(i + 1).ToString().PadLeft(numbers)}] {torrent.Hash} {name}", ColorScheme.Current.Normal);
                             }
 

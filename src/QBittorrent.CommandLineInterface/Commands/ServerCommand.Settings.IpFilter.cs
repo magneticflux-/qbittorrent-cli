@@ -32,8 +32,8 @@ namespace QBittorrent.CommandLineInterface.Commands
                 [Option("-t|--filter-trackers <BOOL>", "Apply filter to trackers", CommandOptionType.SingleValue, Inherited = false)]
                 public bool? IpFilterTrackers { get; set; }
 
-                protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters =>
-                    new Dictionary<string, Func<object, object>>
+                protected override IReadOnlyDictionary<string, Func<object?, object?>> CustomFormatters =>
+                    new Dictionary<string, Func<object?, object?>>
                     {
                         [nameof(IpFilterViewModel.BannedIpAddresses)] =
                             value => value is IEnumerable<string> list ? string.Join(Environment.NewLine, list) : null
@@ -105,7 +105,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 {
                     protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                     {
-                        var prefs = new Preferences {BannedIpAddresses = new string[0]};
+                        var prefs = new Preferences {BannedIpAddresses = Array.Empty<string>()};
                         await client.SetPreferencesAsync(prefs);
                         return ExitCodes.Success;
                     }

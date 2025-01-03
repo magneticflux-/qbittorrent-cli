@@ -81,7 +81,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
             [Option("-s|--sort <PROPERTY>", "Sort by property.", CommandOptionType.SingleValue)]
             [SortValidation]
-            public string Sort { get; set; }
+            public string? Sort { get; set; }
 
             [Option("-r|--reverse", "Reverse the sort order.", CommandOptionType.NoValue)]
             public bool Reverse { get; set; }
@@ -105,7 +105,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     Category = Category,
                     Filter = Enum.TryParse(Filter, true, out TorrentListFilter filter) ? filter : TorrentListFilter.All,
                     SortBy = Sort != null
-                        ? SortColumns.TryGetValue(Sort, out var sort) ? sort : null
+                        ? SortColumns.GetValueOrDefault(Sort)
                         : null,
                     ReverseSort = Reverse,
                     Limit = Limit,
@@ -197,7 +197,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                             {
                                 FormatState(t.State),
                                 new Cell(t.Name),
-                                new Cell(t.Hash.Substring(0, 6)),
+                                new Cell(t.Hash[..6]),
                                 new Cell(FormatSpeed(t.DownloadSpeed).PadLeft(10)),
                                 new Cell(FormatSpeed(t.UploadSpeed).PadLeft(10)),
                                 new Cell(FormatEta(t.EstimatedTime))
@@ -274,37 +274,27 @@ namespace QBittorrent.CommandLineInterface.Commands
 
             private static string FormatSpeed(long speed)
             {
-                if (speed < 1024)
+                return speed switch
                 {
-                    return $"{speed}  B/s";
-                }
-                if (speed < 1024 * 1024)
-                {
-                    return $"{speed / 1024} kB/s";
-                }
-                if (speed < 1024 * 1024 * 1024)
-                {
-                    return $"{speed / (1024 * 1024)} MB/s";
-                }
-                return $"{speed / (1024 * 1024 * 1024)} GB/s";
+                    < 1024 => $"{speed}  B/s",
+                    < 1024 * 1024 => $"{speed / 1024} kB/s",
+                    < 1024 * 1024 * 1024 => $"{speed / (1024 * 1024)} MB/s",
+                    _ => $"{speed / (1024 * 1024 * 1024)} GB/s"
+                };
             }
 
             private static string FormatEta(TimeSpan? eta)
             {
-                if (eta < TimeSpan.FromHours(100))
-                {
-                    var ts = eta.Value;
-                    return $" {ts.Hours:00}.{ts.Minutes:00}.{ts.Seconds:00}";
-                }
-                return string.Empty;
+                if (eta == null || eta.Value >= TimeSpan.FromHours(100)) return string.Empty;
+                var ts = eta.Value;
+                return $" {ts.Hours:00}.{ts.Minutes:00}.{ts.Seconds:00}";
             }
 
             private class SortValidationAttribute : ValidationAttribute
             {
-                protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+                protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
                 {
-                    var str = value as string;
-                    if (str == null || SortColumns.ContainsKey(str))
+                    if (value is not string str || SortColumns.ContainsKey(str))
                         return ValidationResult.Success;
 
                     return new ValidationResult(

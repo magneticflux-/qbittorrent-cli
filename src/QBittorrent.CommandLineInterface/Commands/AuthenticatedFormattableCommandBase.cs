@@ -18,7 +18,7 @@ namespace QBittorrent.CommandLineInterface.Commands
             _formatter = new ObjectFormatter<T>(PrintList, FindProperty);
         }
 
-        protected virtual IReadOnlyDictionary<string, Func<object, object>> CustomFormatters => null;
+        protected virtual IReadOnlyDictionary<string, Func<object?, object?>>? CustomFormatters => null;
 
         [Option("-F|--format <OBJECT_FORMAT>", "Output format: list|csv|json|property", CommandOptionType.SingleValue)]
         public string Format { get; set; }

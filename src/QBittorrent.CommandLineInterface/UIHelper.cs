@@ -15,11 +15,10 @@ namespace QBittorrent.CommandLineInterface
 
         public static object[] FieldsColumns =>
             // ReSharper disable once CoVariantArrayConversion
-            new[]
-            {
+            [
                 new Column {Width = GridLength.Auto},
                 new Column {Width = GridLength.Star(1)}
-            };
+            ];
 
         public static Cell Label(string text)
         {
@@ -41,25 +40,22 @@ namespace QBittorrent.CommandLineInterface
 
         public static object[] Row<T>(string label, T data)
         {
-            Cell dataCell;
-            switch (data)
+            var dataCell = data switch
             {
-                case Cell cell:
-                    dataCell = cell;
-                    break;
-                case Element element:
-                    dataCell = new Cell(element) {Stroke = NoneStroke, Padding = new Thickness(1, 0, 0, 0)};
-                    break;
-                default:
-                    dataCell = Data(data);
-                    break;
-            }
+                Cell cell => cell,
+                Element element => new Cell(element)
+                {
+                    Stroke = NoneStroke,
+                    Padding = new Thickness(1, 0, 0, 0)
+                },
+                _ => Data(data)
+            };
 
-            return new object[] {Label(label), dataCell};
+            return [Label(label), dataCell];
         }
 
         public static void PrintList<T>(IEnumerable<T> list,
-            IReadOnlyDictionary<string, Func<object, object>> customFormatters = null)
+            IReadOnlyDictionary<string, Func<object?, object?>>? customFormatters = null)
         {
             var margin = new Thickness(0, 0, 0, 1);
             var elements = list.Select(item => ToDocument(item, customFormatters).With(x => x.Margin = margin));
@@ -68,14 +64,14 @@ namespace QBittorrent.CommandLineInterface
         }
 
         public static void PrintObject<T>(T obj,
-            IReadOnlyDictionary<string, Func<object, object>> customFormatters = null)
+            IReadOnlyDictionary<string, Func<object?, object?>>? customFormatters = null)
         {
             var document = ToDocument(obj, customFormatters);
             ConsoleRenderer.RenderDocument(document);
         }
 
         public static Document ToDocument<T>(T obj,
-            IReadOnlyDictionary<string, Func<object, object>> customFormatters = null)
+            IReadOnlyDictionary<string, Func<object?, object?>>? customFormatters = null)
         {
             const string defaultFormat = "{0}";
 
@@ -113,12 +109,11 @@ namespace QBittorrent.CommandLineInterface
 
             IEnumerable<(string label, object value)> GetPairs()
             {
-                foreach (var property in properties)
+                foreach (var (label, o, format, nullString, propName) in properties)
                 {
-                    var label = property.name;
-                    if (customFormatters != null && customFormatters.TryGetValue(property.propName, out var formatter))
+                    if (customFormatters != null && customFormatters.TryGetValue(propName, out var formatter))
                     {
-                        var customValue = formatter(property.value);
+                        var customValue = formatter(o);
                         if (customValue != null)
                         {
                             yield return (label, customValue);
@@ -126,9 +121,9 @@ namespace QBittorrent.CommandLineInterface
                         }
                     }
 
-                    var value = property.value == null && property.nullString != null
-                        ? property.nullString
-                        : string.Format(property.format, property.value);
+                    var value = o == null && nullString != null
+                        ? nullString
+                        : string.Format(format, o);
                     yield return (label, value);
                 }
             }

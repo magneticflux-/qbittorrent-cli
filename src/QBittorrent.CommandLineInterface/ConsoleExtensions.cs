@@ -69,7 +69,7 @@ namespace QBittorrent.CommandLineInterface
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IConsole WriteLineColored(this IConsole console, string text, ColorSet colorSet)
+        public static IConsole WriteLineColored(this IConsole console, string text, ColorSet? colorSet)
         {
             return console.WriteLineColored(text, colorSet?.GetEffectiveForeground(), colorSet?.GetEffectiveBackground());
         }

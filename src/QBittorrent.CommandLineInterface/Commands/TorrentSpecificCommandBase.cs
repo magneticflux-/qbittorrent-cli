@@ -20,24 +20,23 @@ namespace QBittorrent.CommandLineInterface.Commands
 
         protected sealed override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
         {
-            if (Hash.Length < 40 && !(AllowAll && IsAll))
+            if (Hash.Length >= 40 || AllowAll && IsAll)
+                return await OnExecuteTorrentSpecificAsync(client, app, console);
+
+            var torrents = await client.GetTorrentListAsync();
+            var matching = torrents
+                .Where(t => t.Hash.StartsWith(Hash, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+
+            switch (matching.Count)
             {
-                var torrents = await client.GetTorrentListAsync();
-                var matching = torrents
-                    .Where(t => t.Hash.StartsWith(Hash, StringComparison.InvariantCultureIgnoreCase))
-                    .ToList();
-
-
-                if (matching.Count == 0)
-                {
+                case 0:
                     console.WriteLineColored($"No torrent matching hash {Hash} is found.", ColorScheme.Current.Warning);
                     return ExitCodes.NotFound;
-                }
-                if (matching.Count == 1)
-                {
+                case 1:
                     Hash = matching[0].Hash;
-                }
-                else
+                    break;
+                default:
                 {
                     console.WriteLineColored($"The are several torrents matching partial hash {Hash}:", ColorScheme.Current.Normal);
                     var numbers = (int)Math.Log10(matching.Count) + 1;
@@ -47,7 +46,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         var torrent = matching[i];
                         var name = torrent.Name.Length < nameWidth
                             ? torrent.Name
-                            : torrent.Name.Substring(0, nameWidth - 3) + "...";
+                            : torrent.Name[..(nameWidth - 3)] + "...";
                         console.WriteLineColored($"[{(i + 1).ToString().PadLeft(numbers)}] {torrent.Hash} {name}", ColorScheme.Current.Normal);
                     }
 
@@ -57,6 +56,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         index = Prompt.GetInt("Please, select the required one:");
                     }
                     Hash = matching[index - 1].Hash;
+                    break;
                 }
             }
 

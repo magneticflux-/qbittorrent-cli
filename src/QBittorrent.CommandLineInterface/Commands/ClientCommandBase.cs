@@ -14,27 +14,21 @@ namespace QBittorrent.CommandLineInterface.Commands
         protected internal const string FormatHelpText =
             "\nSee https://github.com/fedarovich/qbittorrent-cli/wiki/Output-Formats for more information about output formats.\n";
 
-        protected ClientCommandBase()
-        {
-            GeneralSettings = SettingsService.Instance.GetGeneral();
-            NetworkSettings = SettingsService.Instance.GetNetwork();
-        }
-
         [Option("--url <SERVER_URL>", "QBittorrent Server URL", CommandOptionType.SingleValue)]
         public string Url { get; set; }
 
         [Option("--username <USERNAME>", "User name", CommandOptionType.SingleValue)]
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         [Option("--password <PASSWORD>", "User password", CommandOptionType.SingleValue)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         [Option("--ask-for-password", "Ask the user to enter a password in a secure way.", CommandOptionType.NoValue)]
         public bool AskForPassword { get; set; }
 
-        protected GeneralSettings GeneralSettings { get; }
+        protected GeneralSettings GeneralSettings { get; } = SettingsService.Instance.GetGeneral();
 
-        protected NetworkSettings NetworkSettings { get; }
+        protected NetworkSettings NetworkSettings { get; } = SettingsService.Instance.GetNetwork();
 
         protected QBittorrentClient CreateClient()
         {
@@ -52,7 +46,7 @@ namespace QBittorrent.CommandLineInterface.Commands
             return new QBittorrentClient(new Uri(Url, UriKind.Absolute), handler, true);
         }
 
-        private IWebProxy GetProxy()
+        private WebProxy? GetProxy()
         {
             if (NetworkSettings.Proxy == null)
                 return null;
@@ -110,18 +104,11 @@ namespace QBittorrent.CommandLineInterface.Commands
             }
         }
 
-        private class CredentialCacheWithDefault : ICredentials
+        private class CredentialCacheWithDefault(CredentialCache cache) : ICredentials
         {
-            private readonly CredentialCache _cache;
-
-            public CredentialCacheWithDefault(CredentialCache cache)
-            {
-                _cache = cache;
-            }
-
             public NetworkCredential GetCredential(Uri uri, string authType)
             {
-                return _cache.GetCredential(uri, authType) ?? CredentialCache.DefaultNetworkCredentials;
+                return cache.GetCredential(uri, authType) ?? CredentialCache.DefaultNetworkCredentials;
             }
         }
     }

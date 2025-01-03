@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -85,7 +86,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 {
                     protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                     {
-                        var prefs = new Preferences {AdditinalTrackers = new string[0]};
+                        var prefs = new Preferences {AdditinalTrackers = Array.Empty<string>()};
                         await client.SetPreferencesAsync(prefs);
                         return ExitCodes.Success;
                     }

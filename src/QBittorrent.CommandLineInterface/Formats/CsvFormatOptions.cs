@@ -11,7 +11,7 @@ namespace QBittorrent.CommandLineInterface.Formats
 
         public bool Sanitize { get; set; }
 
-        public string Culture { get; set; }
+        public string? Culture { get; set; }
 
         public static implicit operator CsvConfiguration(CsvFormatOptions options)
         {

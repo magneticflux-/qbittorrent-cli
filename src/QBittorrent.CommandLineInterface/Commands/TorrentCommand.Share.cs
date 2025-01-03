@@ -16,7 +16,7 @@ namespace QBittorrent.CommandLineInterface.Commands
         [Command("share", "sharing", "seeding", Description = "Manages torrent sharing limits.", ExtendedHelpText = FormatHelpText)]
         public class Share : TorrentSpecificFormattableCommandBase<TorrentShareViewModel>
         {
-            private IReadOnlyDictionary<string, Func<object, object>> _customFormatters;
+            private Dictionary<string, Func<object?, object?>> _customFormatters;
 
             [Option("-r|--ratio-limit <VALUE>", "Set the ratio limit (number|GLOBAL|NONE)", CommandOptionType.SingleValue)]
             [ShareRatioLimitValidation]
@@ -30,7 +30,7 @@ namespace QBittorrent.CommandLineInterface.Commands
             [ShareSeedingTimeLimitValidation]
             public string InactiveSeedingTimeLimit { get; set; }
 
-            protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters => _customFormatters;
+            protected override IReadOnlyDictionary<string, Func<object?, object?>> CustomFormatters => _customFormatters;
 
             protected override async Task<int> OnExecuteTorrentSpecificAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
             {
@@ -76,7 +76,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     client.GetPreferencesAsync());
                 var viewModel = new TorrentShareViewModel(properties, info);
 
-                _customFormatters = new Dictionary<string, Func<object, object>>
+                _customFormatters = new Dictionary<string, Func<object?, object?>>
                 {
                     [nameof(viewModel.RatioLimit)] = FormatRatioLimit,
                     [nameof(viewModel.SeedingTimeLimit)] = FormatSeedingTimeLimit,
@@ -86,7 +86,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 return ExitCodes.Success;
 
-                object FormatRatioLimit(object arg)
+                object? FormatRatioLimit(object? arg)
                 {
                     switch (arg)
                     {
@@ -102,7 +102,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     }
                 }
 
-                object FormatSeedingTimeLimit(object arg)
+                object? FormatSeedingTimeLimit(object? arg)
                 {
                     var time = arg as TimeSpan?;
                     if (time == ShareLimits.SeedingTime.Global)
@@ -114,7 +114,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     return time == ShareLimits.SeedingTime.Unlimited ? "None" : time?.ToString();
                 }
 
-                object FormatInactiveSeedingTimeLimit(object arg)
+                object? FormatInactiveSeedingTimeLimit(object? arg)
                 {
                     var time = arg as TimeSpan?;
                     if (time == ShareLimits.SeedingTime.Global)

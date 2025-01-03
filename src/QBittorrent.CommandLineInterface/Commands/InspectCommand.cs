@@ -13,13 +13,12 @@ namespace QBittorrent.CommandLineInterface.Commands
     [Subcommand(typeof(File))]
     public class InspectCommand
     {
-
-        private static Element BuildFileTable(Torrent torrent)
+        private static Element? BuildFileTable(Torrent torrent)
         {
             if (torrent.Files != null)
             {
                 return new Stack(
-                    $"Directory: {torrent.Files?.DirectoryName}",
+                    $"Directory: {torrent.Files.DirectoryName}",
                     new Grid
                     {
                         Stroke = new LineThickness(LineWidth.None, LineWidth.None),
@@ -64,12 +63,12 @@ namespace QBittorrent.CommandLineInterface.Commands
             return null;
         }
 
-        private static Element BuildTrackerList(Torrent torrent)
+        private static List BuildTrackerList(Torrent torrent)
         {
             return new List(torrent.Trackers.Select(t => string.Join("\n", t)));
         }
 
-        private static Element BuildExtraFields(Torrent torrent)
+        private static BlockElement? BuildExtraFields(Torrent torrent)
         {
             if (torrent.ExtraFields == null || torrent.ExtraFields.Count == 0)
                 return null;
@@ -90,27 +89,22 @@ namespace QBittorrent.CommandLineInterface.Commands
                         dict.Select(f => new[]
                         {
                             new Cell(f.Key.ToString()),
-                            new Cell(FormatBOject(f.Value))
+                            new Cell(FormatBObject(f.Value))
                         })
                     }
                 };
             }
 
-            Element FormatBOject(IBObject value)
+            Element? FormatBObject(IBObject value)
             {
-                switch (value)
+                return value switch
                 {
-                    case BList bList:
-                        return new List(bList.Select(FormatBOject));
-                    case BNumber bNumber:
-                        return new Span(bNumber.Value.ToString());
-                    case BDictionary bDictionary:
-                        return FormatBDictionary(bDictionary);
-                    case BString bString:
-                        return new Span(bString.ToString());
-                    default:
-                        return null;
-                }
+                    BList bList => new List(bList.Select(FormatBObject)),
+                    BNumber bNumber => new Span(bNumber.Value.ToString()),
+                    BDictionary bDictionary => FormatBDictionary(bDictionary),
+                    BString bString => new Span(bString.ToString()),
+                    _ => null
+                };
             }
         }
 

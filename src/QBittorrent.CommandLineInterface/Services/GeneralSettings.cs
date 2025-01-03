@@ -14,13 +14,13 @@ namespace QBittorrent.CommandLineInterface.Services
         [DefaultValue(DefaultUrl)]
         public string Url { get; set; } = DefaultUrl;
 
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         [JsonConverter(typeof(EncryptConverter))]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         [JsonExtensionData]
-        public IDictionary<string, JToken> Other { get; set; }
+        public IDictionary<string, JToken>? Other { get; set; }
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)

@@ -92,7 +92,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     public Uri FeedUrl { get; set; }
 
                     [Option("-p|--path <PATH>", "Virtual path for the feed. Use backslash \\ as a separator.", CommandOptionType.SingleValue)]
-                    public string Path { get; set; }
+                    public string? Path { get; set; }
 
                     protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                     {
@@ -165,21 +165,21 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                     var vm = new RssFeedViewModel(Path, feed);
                     UIHelper.PrintObject(vm,
-                        new Dictionary<string, Func<object, object>>
+                        new Dictionary<string, Func<object?, object?>>
                         {
                             [nameof(vm.Articles)] = FormatArticles
                         });
                     return ExitCodes.Success;
                 }
 
-                private RssFeed GetFeedByPath(RssFolder folder, string path)
+                private RssFeed? GetFeedByPath(RssFolder? folder, string path)
                 {
-                    var segments = new Queue<string>(Path.Split(new[] {'\\'}, StringSplitOptions.RemoveEmptyEntries));
+                    var segments = new Queue<string>(Path.Split(['\\'], StringSplitOptions.RemoveEmptyEntries));
 
                     while (segments.Count > 1)
                     {
                         var name = segments.Dequeue();
-                        folder = folder.Folders.SingleOrDefault(f => f.Name == name);
+                        folder = folder?.Folders.SingleOrDefault(f => f.Name == name);
                         if (folder == null)
                             return null;
                     }
@@ -193,9 +193,9 @@ namespace QBittorrent.CommandLineInterface.Commands
                     return null;
                 }
 
-                private object FormatArticles(object obj)
+                private object? FormatArticles(object? obj)
                 {
-                    if (!(obj is IEnumerable<RssArticleViewModel> articles))
+                    if (obj is not IEnumerable<RssArticleViewModel> articles)
                         return null;
 
                     return new Alba.CsConsoleFormat.List(articles.Select(ToDocument));

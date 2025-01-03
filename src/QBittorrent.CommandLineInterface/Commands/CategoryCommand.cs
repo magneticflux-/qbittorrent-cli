@@ -104,7 +104,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
             protected override void PrintTable(IEnumerable<Category> categories)
             {
-                if (categories?.Any() == true)
+                if (categories.Any())
                 {
                     var doc = new Document(
                             new Grid

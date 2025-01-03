@@ -85,7 +85,7 @@ namespace DocumentationGenerator
             var commands = application.Commands.Where(c => c.ShowInHelpText).ToList();
 
             var firstColumnWidth = 2 + Math.Max(
-                arguments.Count > 0 ? arguments.Max(a => a.Name.Length) : 0,
+                arguments.Count > 0 ? arguments.Max(a => a.Name!.Length) : 0,
                 Math.Max(
                     options.Count > 0 ? options.Max(o => Format(o).Length) : 0,
                     commands.Count > 0 ? commands.Max(c => c.Name?.Length ?? 0) : 0));
@@ -197,7 +197,7 @@ namespace DocumentationGenerator
 
                 foreach (var opt in visibleOptions)
                 {
-                    var message = $"| {Format(opt)} | {opt.Description.Replace("|", " \\| ").Replace("\n", "")} |";
+                    var message = $"| {Format(opt)} | {opt.Description!.Replace("|", " \\| ").Replace("\n", "")} |";
                     output.WriteLine(message);
                 }
                 output.WriteLine();
@@ -261,7 +261,7 @@ namespace DocumentationGenerator
                 return;
 
             output.WriteLine("### Details");
-            var paragraphs = application.ExtendedHelpText.Split(new[] {"\r\n", "\n", "\r"}, StringSplitOptions.None);
+            var paragraphs = application.ExtendedHelpText.Split(["\r\n", "\n", "\r"], StringSplitOptions.None);
             foreach (var paragraph in paragraphs)
             {
                 output.Write(paragraph);
@@ -285,7 +285,7 @@ namespace DocumentationGenerator
 
             return string.Join("<br/>", parts.Where(p => !string.IsNullOrEmpty(p)));
 
-            string GetOptionName(string prefix, string name)
+            string GetOptionName(string prefix, string? name)
             {
                 return string.IsNullOrEmpty(name) ? string.Empty : $"`{prefix}{name}{value}`";
             }
@@ -303,7 +303,7 @@ namespace DocumentationGenerator
             }
         }
 
-        private IEnumerable<string> EnumerateCommandParts(CommandLineApplication command, string alias = null)
+        private IEnumerable<string> EnumerateCommandParts(CommandLineApplication command, string? alias = null)
         {
             if (command.Parent != null)
             {
@@ -313,7 +313,7 @@ namespace DocumentationGenerator
                 }
             }
 
-            yield return alias ?? command.Name;
+            yield return alias ?? command.Name!;
         }
     }
 }

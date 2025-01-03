@@ -6,7 +6,7 @@ namespace QBittorrent.CommandLineInterface.Formats
 {
     public static class FormatParser
     {
-        public static (string format, IReadOnlyDictionary<string, string> options) Parse(string formatString)
+        public static (string? format, IReadOnlyDictionary<string, string?>? options) Parse(string formatString)
         {
             if (string.IsNullOrWhiteSpace(formatString))
                 return (null, null);
@@ -14,9 +14,9 @@ namespace QBittorrent.CommandLineInterface.Formats
             var parts = Regex.Split(formatString, @"(?<!\\):");
             return (parts[0].ToLowerInvariant(), parts.Skip(1).Where(o => !string.IsNullOrWhiteSpace(o)).Select(ParseOption).ToDictionary(x => x.key, x => x.value));
 
-            (string key, string value) ParseOption(string option)
+            (string key, string? value) ParseOption(string option)
             {
-                var optionParts = option.Split(new[] {'='}, 2);
+                var optionParts = option.Split(['='], 2);
                 return (
                     optionParts[0],
                     optionParts.ElementAtOrDefault(1)
@@ -37,7 +37,7 @@ namespace QBittorrent.CommandLineInterface.Formats
         {
             return new CsvFormatOptions
             {
-                Delimiter = options.TryGetNotEmptyString("delimiter", ","),
+                Delimiter = options.TryGetNotEmptyString("delimiter", ",")!,
                 Quote = options.TryGetChar("quote", '"'),
                 Sanitize = false,
                 Culture = options.TryGetNotEmptyString("culture", null)
@@ -59,12 +59,12 @@ namespace QBittorrent.CommandLineInterface.Formats
             return options.TryGetValue(key, out var stringValue) && bool.TryParse(stringValue, out var result) ? result : defaultValue;
         }
 
-        public static char TryGetChar(this IReadOnlyDictionary<string, string> options, string key, char defaultValue = default)
+        public static char TryGetChar(this IReadOnlyDictionary<string, string> options, string key, char defaultValue = '\0')
         {
             return options.TryGetValue(key, out var stringValue) && char.TryParse(stringValue, out var result) ? result : defaultValue;
         }
 
-        public static string TryGetNotEmptyString(this IReadOnlyDictionary<string, string> options, string key, string defaultValue)
+        public static string? TryGetNotEmptyString(this IReadOnlyDictionary<string, string> options, string key, string? defaultValue)
         {
             return options.TryGetValue(key, out var stringValue) && !string.IsNullOrEmpty(stringValue) ? stringValue : defaultValue;
         }

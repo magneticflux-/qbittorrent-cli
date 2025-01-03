@@ -18,7 +18,7 @@ namespace QBittorrent.CommandLineInterface.Commands
         [Option("-F|--format <LIST_FORMAT>", "Output format: table|list|csv|json", CommandOptionType.SingleValue)]
         public virtual string Format { get; set; }
 
-        protected virtual IReadOnlyDictionary<string, Func<object, object>> ListCustomFormatters => null;
+        protected virtual IReadOnlyDictionary<string, Func<object?, object?>>? ListCustomFormatters => null;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void Print(IEnumerable<T> data, bool preferList = false)

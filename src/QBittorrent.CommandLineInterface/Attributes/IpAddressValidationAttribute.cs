@@ -5,15 +5,17 @@ namespace QBittorrent.CommandLineInterface.Attributes
 {
     public class IpAddressValidationAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            if (value is null)
-                return ValidationResult.Success;
+            switch (value)
+            {
+                case null:
+                case string str when IPAddress.TryParse(str, out _):
+                    return ValidationResult.Success;
+                default:
+                    return new ValidationResult($"The value {value} is not a correct IP address.");
+            }
 
-            if (value is string str && IPAddress.TryParse(str, out _))
-                return ValidationResult.Success;
-
-            return new ValidationResult($"The value {value} is not a correct IP address.");
         }
     }
 }

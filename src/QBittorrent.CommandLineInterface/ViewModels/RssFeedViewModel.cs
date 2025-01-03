@@ -45,7 +45,7 @@ namespace QBittorrent.CommandLineInterface.ViewModels
 
         [Display(Name = "Articles")]
         [DisplayFormat(NullDisplayText = "n/a")]
-        public IEnumerable<RssArticleViewModel> Articles =>
+        public IEnumerable<RssArticleViewModel>? Articles =>
             _wrappedObject.Articles?.Select(a => new RssArticleViewModel(a));
     }
 }

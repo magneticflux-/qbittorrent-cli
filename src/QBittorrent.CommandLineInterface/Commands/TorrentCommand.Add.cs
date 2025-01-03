@@ -66,10 +66,10 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 [Option("-L|--content-layout", "Content layout (Original|Subfolder|NoSubfolder). Requires qBittorrent 4.3.2 or later.", CommandOptionType.SingleValue)]
                 [EnumValidation(typeof(TorrentContentLayout), AllowEmpty = true)]
-                public string ContentLayout { get; set; }
+                public string? ContentLayout { get; set; }
 
                 [Option("-t|--tag <TAG>", "The tag to be added to the torrent. Can be specified multiple times. Requires qBittorrent 4.3.4 or later.", CommandOptionType.MultipleValue)]
-                public IList<string> Tags { get; set; }
+                public IList<string>? Tags { get; set; }
 
                 protected async Task WarnUnsupportedOptions(IQBittorrentClient client, IConsole console)
                 {

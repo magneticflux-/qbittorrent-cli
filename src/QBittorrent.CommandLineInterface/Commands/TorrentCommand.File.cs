@@ -92,7 +92,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         {
                             foreach (var file in Files)
                             {
-                                console.WriteLineColored(contents?[file]?.Priority.ToString(), ColorScheme.Current.Normal);
+                                console.WriteLineColored(contents?[file]?.Priority.ToString()!, ColorScheme.Current.Normal);
                             }
                         }
                         else

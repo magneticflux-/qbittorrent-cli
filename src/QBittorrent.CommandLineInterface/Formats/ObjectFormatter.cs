@@ -14,10 +14,10 @@ namespace QBittorrent.CommandLineInterface.Formats
 {
     public class ObjectFormatter<T>
     {
-        private readonly Func<string, PropertyInfo> _customPropertyBinder;
+        private readonly Func<string, PropertyInfo>? _customPropertyBinder;
         private readonly Action<T> _printList;
 
-        public ObjectFormatter(Action<T> printList = null, Func<string, PropertyInfo> customPropertyBinder = null)
+        public ObjectFormatter(Action<T>? printList = null, Func<string, PropertyInfo>? customPropertyBinder = null)
         {
             _printList = printList ?? (obj => UIHelper.PrintObject(obj));
             _customPropertyBinder = customPropertyBinder;
@@ -47,13 +47,13 @@ namespace QBittorrent.CommandLineInterface.Formats
                     _printList(data);
                     break;
                 case ObjectFormats.Json:
-                    PrintJson(data, options.GetJsonOptions());
+                    PrintJson(data, options!.GetJsonOptions());
                     break;
                 case ObjectFormats.Csv:
-                    PrintCsv(data, options.GetCsvOptions());
+                    PrintCsv(data, options!.GetCsvOptions());
                     break;
                 case ObjectFormats.Property:
-                    PrintProperty(data, options.GetPropertyOptions());
+                    PrintProperty(data, options!.GetPropertyOptions());
                     break;
             }
         }
@@ -69,7 +69,7 @@ namespace QBittorrent.CommandLineInterface.Formats
         {
             using (var writer = new CsvWriter(Console.Out, (CsvConfiguration)options, true))
             {
-                writer.WriteRecords(new[] {data});
+                writer.WriteRecords([data]);
             }
         }
 
@@ -84,7 +84,6 @@ namespace QBittorrent.CommandLineInterface.Formats
                 ?? TryGetPropertyByDisplayName()
                 ?? _customPropertyBinder?.Invoke(options.Name)
                 ?? throw new Exception($"Cannot find property '{options.Name}'.");
-            ;
             var value = property.GetValue(data);
 
             switch (value)
@@ -107,13 +106,13 @@ namespace QBittorrent.CommandLineInterface.Formats
             }
 
 
-            PropertyInfo TryGetPropertyByName()
+            PropertyInfo? TryGetPropertyByName()
             {
                 return type.GetProperty(options.Name)
                     ?? type.GetProperty(options.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
             }
 
-            PropertyInfo TryGetPropertyByJsonName()
+            PropertyInfo? TryGetPropertyByJsonName()
             {
                 var props =
                     from p in type.GetProperties()
@@ -124,7 +123,7 @@ namespace QBittorrent.CommandLineInterface.Formats
                 return props.FirstOrDefault();
             }
 
-            PropertyInfo TryGetPropertyByDisplayName()
+            PropertyInfo? TryGetPropertyByDisplayName()
             {
                 var props =
                     from p in type.GetProperties()

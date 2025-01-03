@@ -69,10 +69,10 @@ namespace QBittorrent.CommandLineInterface.Commands
                     "Proxy server user name. Pass empty string to use default credentials.",
                     CommandOptionType.SingleValue)]
                 [Required(AllowEmptyStrings = true)]
-                public string Username { get; set; }
+                public string? Username { get; set; }
 
                 [Option("-p|--password <PASSWORD>", "Proxy server password.", CommandOptionType.SingleValue)]
-                public string Password { get; set; }
+                public string? Password { get; set; }
 
                 [Option("-l|--bypass-local", "Bypass proxy for local addresses.", CommandOptionType.NoValue)]
                 public bool BypassLocal { get; set; }
@@ -86,15 +86,15 @@ namespace QBittorrent.CommandLineInterface.Commands
                 {
                     if (!string.IsNullOrEmpty(Username))
                     {
-                        Password = Password ?? GetPassword();
+                        Password ??= GetPassword();
                     }
 
                     var networkSettings = SettingsService.Instance.GetNetwork();
                     networkSettings.Proxy = new ProxySettings
                     {
                         Address = Address,
-                        Username = Username,
-                        Password = Password,
+                        Username = Username!,
+                        Password = Password!,
                         BypassLocal = BypassLocal,
                         Bypass = Bypass
                     };
@@ -104,7 +104,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     string GetPassword()
                     {
                         return console.IsInputRedirected
-                            ? console.In.ReadLine()
+                            ? console.In.ReadLine()!
                             : Prompt.GetPassword("Please, enter your proxy password: ");
                     }
                 }

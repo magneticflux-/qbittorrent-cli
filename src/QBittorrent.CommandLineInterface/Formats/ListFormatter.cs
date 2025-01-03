@@ -6,16 +6,10 @@ using Newtonsoft.Json;
 
 namespace QBittorrent.CommandLineInterface.Formats
 {
-    public class ListFormatter<T>
+    public class ListFormatter<T>(Action<IEnumerable<T>> printTable, Action<IEnumerable<T>> printList)
     {
-        private readonly Action<IEnumerable<T>> _printList;
-        private readonly Action<IEnumerable<T>> _printTable;
-
-        public ListFormatter(Action<IEnumerable<T>> printTable, Action<IEnumerable<T>> printList)
-        {
-            _printTable = printTable;
-            _printList = printList;
-        }
+        private readonly Action<IEnumerable<T>>? _printList = printList;
+        private readonly Action<IEnumerable<T>>? _printTable = printTable;
 
         public void PrintFormat(IEnumerable<T> data, string formatOptions, bool preferList = false)
         {
@@ -34,10 +28,10 @@ namespace QBittorrent.CommandLineInterface.Formats
                     _printList(data);
                     break;
                 case ListFormats.Json:
-                    PrintJson(data, options.GetJsonOptions());
+                    PrintJson(data, options!.GetJsonOptions());
                     break;
                 case ListFormats.Csv:
-                    PrintCsv(data, options.GetCsvOptions());
+                    PrintCsv(data, options!.GetCsvOptions());
                     break;
                 default:
                     throw new Exception("Unsupported output format.");

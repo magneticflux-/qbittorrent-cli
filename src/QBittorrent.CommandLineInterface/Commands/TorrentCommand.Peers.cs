@@ -20,7 +20,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 if (response == null)
                     return ExitCodes.Failure;
 
-                var peers = response.PeersChanged?.Values ?? Enumerable.Empty<PeerPartialInfo>();
+                var peers = response.PeersChanged?.Values ?? [];
 
                 var doc = new Document(
                     new Grid
@@ -66,7 +66,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 return ExitCodes.Success;
 
-                string FormatEndpoint(IPAddress address, int? port)
+                string? FormatEndpoint(IPAddress? address, int? port)
                 {
                     if (address == null || port == null)
                         return null;
@@ -76,44 +76,26 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 string FormatSpeed(int? speed)
                 {
-                    if (speed == null)
+                    return speed switch
                     {
-                        return string.Empty;
-                    }
-                    if (speed < 1024)
-                    {
-                        return $"{speed}  B/s";
-                    }
-                    if (speed < 1024 * 1024)
-                    {
-                        return $"{speed / 1024} kB/s";
-                    }
-                    if (speed < 1024 * 1024 * 1024)
-                    {
-                        return $"{speed / (1024 * 1024)} MB/s";
-                    }
-                    return $"{speed / (1024 * 1024 * 1024)} GB/s";
+                        null => string.Empty,
+                        < 1024 => $"{speed}  B/s",
+                        < 1024 * 1024 => $"{speed / 1024} kB/s",
+                        < 1024 * 1024 * 1024 => $"{speed / (1024 * 1024)} MB/s",
+                        _ => $"{speed / (1024 * 1024 * 1024)} GB/s"
+                    };
                 }
 
                 string FormatData(long? amount)
                 {
-                    if (amount == null)
+                    return amount switch
                     {
-                        return string.Empty;
-                    }
-                    if (amount < 1024)
-                    {
-                        return $"{amount}  B";
-                    }
-                    if (amount < 1024 * 1024)
-                    {
-                        return $"{amount / 1024} kB";
-                    }
-                    if (amount < 1024 * 1024 * 1024)
-                    {
-                        return $"{amount / (1024 * 1024)} MB";
-                    }
-                    return $"{amount / (1024 * 1024 * 1024)} GB";
+                        null => string.Empty,
+                        < 1024 => $"{amount}  B",
+                        < 1024 * 1024 => $"{amount / 1024} kB",
+                        < 1024 * 1024 * 1024 => $"{amount / (1024 * 1024)} MB",
+                        _ => $"{amount / (1024 * 1024 * 1024)} GB"
+                    };
                 }
             }
         }

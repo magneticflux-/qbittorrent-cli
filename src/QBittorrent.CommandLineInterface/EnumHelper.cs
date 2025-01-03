@@ -6,7 +6,7 @@ namespace QBittorrent.CommandLineInterface
     {
         public static bool IsDefined<T>(T value)
         {
-            return Enum.IsDefined(typeof(T), value);
+            return Enum.IsDefined(typeof(T), value!);
         }
     }
 }

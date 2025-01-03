@@ -138,19 +138,13 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                         Cell FormatSaveLocation(SaveLocation location)
                         {
-                            switch (location.StandardFolder)
+                            return location.StandardFolder switch
                             {
-                                case StandardSaveLocation.MonitoredFolder:
-                                    return new Cell("Monitored Folder");
-                                case StandardSaveLocation.Default:
-                                    return new Cell("Default");
-                                case null:
-                                    return new Cell(
-                                        new Span("Custom: "),
-                                        new Span(location.CustomFolder).SetColors(ColorScheme.Current.Strong));
-                                default:
-                                    return new Cell(location.ToString()).SetColors(ColorScheme.Current.Warning);
-                            }
+                                StandardSaveLocation.MonitoredFolder => new Cell("Monitored Folder"),
+                                StandardSaveLocation.Default => new Cell("Default"),
+                                null => new Cell(new Span("Custom: "), new Span(location.CustomFolder).SetColors(ColorScheme.Current.Strong)),
+                                _ => new Cell(location.ToString()).SetColors(ColorScheme.Current.Warning)
+                            };
                         }
                     }
                 }

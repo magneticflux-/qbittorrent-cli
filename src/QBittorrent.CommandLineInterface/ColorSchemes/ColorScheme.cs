@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -16,14 +15,14 @@ namespace QBittorrent.CommandLineInterface.ColorSchemes
         private const string DarkResource = "QBittorrent.CommandLineInterface.ColorSchemes.dark.json";
         private const string LightResource = "QBittorrent.CommandLineInterface.ColorSchemes.light.json";
 
-        private static ColorScheme _current;
+        private static ColorScheme? _current;
 
         static ColorScheme()
         {
             _dark = new Lazy<ColorScheme>(() => JsonConvert.DeserializeObject<ColorScheme>(
-                ReadJsonFromResource(DarkResource)));
+                ReadJsonFromResource(DarkResource)) ?? throw new InvalidOperationException());
             _light = new Lazy<ColorScheme>(() => JsonConvert.DeserializeObject<ColorScheme>(
-                ReadJsonFromResource(LightResource)));
+                ReadJsonFromResource(LightResource)) ?? throw new InvalidOperationException());
             _default = new Lazy<ColorScheme>(() => IsLight() ? _light.Value : _dark.Value);
 
             bool IsLight()
@@ -65,20 +64,20 @@ namespace QBittorrent.CommandLineInterface.ColorSchemes
         public ColorSet Inactive { get; private set; }
 
         [JsonProperty("log")]
-        public IReadOnlyDictionary<string, ColorSet> LogColors { get; private set; }
+        public IReadOnlyDictionary<string, ColorSet>? LogColors { get; private set; }
 
         [JsonProperty("torrent-status")]
-        public IReadOnlyDictionary<string, ColorSet> TorrentStateColors { get; private set; }
+        public IReadOnlyDictionary<string, ColorSet>? TorrentStateColors { get; private set; }
 
         public static async Task<ColorScheme> FromJsonAsync(string json)
         {
             var config = JObject.Parse(json);
             var schema = await LoadSchemaAsync().ConfigureAwait(false);
             var errors = schema.Validate(config);
-            if (errors != null && errors.Any())
+            if (errors != null && errors.Count != 0)
                 throw new Exception("The color scheme file is invalid."); // TODO: Throw specific exception.
 
-            return config.ToObject<ColorScheme>();
+            return config.ToObject<ColorScheme>() ?? throw new InvalidOperationException();
         }
 
         private static async Task<JsonSchema> LoadSchemaAsync()
@@ -89,7 +88,7 @@ namespace QBittorrent.CommandLineInterface.ColorSchemes
 
         private static string ReadJsonFromResource(string resourceName)
         {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName) ?? throw new InvalidOperationException())
             using (var reader = new StreamReader(stream))
             {
                 var json = reader.ReadToEnd();

@@ -18,7 +18,7 @@ namespace QBittorrent.CommandLineInterface.ViewModels
         }
 
         public string Endpoint =>
-            _wrappedObject.Address != null && _wrappedObject.Port != null
+            _wrappedObject is {Address: not null, Port: not null}
                 ? new IPEndPoint(_wrappedObject.Address, _wrappedObject.Port.Value).ToString()
                 : "n/a";
 

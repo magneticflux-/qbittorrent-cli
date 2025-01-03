@@ -6,7 +6,7 @@ namespace QBittorrent.CommandLineInterface.Converters
 {
     public class EncryptConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             if (value == null)
             {
@@ -18,19 +18,15 @@ namespace QBittorrent.CommandLineInterface.Converters
             writer.WriteValue(EncryptionService.Instance.Encrypt(str));
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonToken.Null)
+            return reader.TokenType switch
             {
-                return null;
-            }
+                JsonToken.Null => (object?)null,
+                JsonToken.String => EncryptionService.Instance.Decrypt((string)reader.Value!),
+                _ => throw new JsonSerializationException($"Unexpected token {reader.TokenType}.")
+            };
 
-            if (reader.TokenType == JsonToken.String)
-            {
-                return EncryptionService.Instance.Decrypt((string)reader.Value);
-            }
-
-            throw new JsonSerializationException($"Unexpected token {reader.TokenType}.");
         }
 
         public override bool CanConvert(Type objectType)

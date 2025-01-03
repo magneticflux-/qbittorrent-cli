@@ -22,15 +22,15 @@ namespace QBittorrent.CommandLineInterface.Attributes
 
         public bool AllowEmpty { get; set; }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            if (value == null && AllowEmpty)
-                return ValidationResult.Success;
-
-            if (value is string str &&
-                (Enum.TryParse(EnumType, str, !CaseSensitive, out _) || AllowEmpty && string.IsNullOrEmpty(str))
-            )
-                return ValidationResult.Success;
+            switch (value)
+            {
+                case null when AllowEmpty:
+                case string str when
+                    Enum.TryParse(EnumType, str, !CaseSensitive, out _) || AllowEmpty && string.IsNullOrEmpty(str):
+                    return ValidationResult.Success;
+            }
 
             var values = string.Join(", ", Enum.GetValues(EnumType).Cast<object>());
             if (!CaseSensitive)

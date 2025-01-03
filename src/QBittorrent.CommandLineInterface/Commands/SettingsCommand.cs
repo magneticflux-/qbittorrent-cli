@@ -106,7 +106,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     string value;
                     if (console.IsInputRedirected)
                     {
-                        value = console.In.ReadLine();
+                        value = console.In.ReadLine()!;
                     }
                     else
                     {

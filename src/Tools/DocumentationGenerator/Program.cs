@@ -26,7 +26,7 @@ namespace DocumentationGenerator
         public string RootCommand { get; set; }
 
         [Option("-n|--name <ROOT_COMMAND_NAME>", "", CommandOptionType.SingleValue)]
-        public string RootCommandName { get; set; }
+        public string? RootCommandName { get; set; }
 
         private static int Main(string[] args)
         {
@@ -51,7 +51,7 @@ namespace DocumentationGenerator
             var rootCommandType = assembly.GetExportedTypes().FirstOrDefault(t => t.FullName == rootCommandTypeName)
                 ?? assembly.GetExportedTypes().Single(t => t.Name == rootCommandTypeName);
             var appType = typeof(CommandLineApplication<>).MakeGenericType(rootCommandType);
-            var root = (CommandLineApplication)Activator.CreateInstance(appType, new object[] {true});
+            var root = (CommandLineApplication)Activator.CreateInstance(appType, [true])!;
             root.Conventions.UseDefaultConventions();
             root.Name = RootCommandName ?? assembly.GetName().Name;
 
@@ -62,7 +62,7 @@ namespace DocumentationGenerator
             }
 
             var helpTextGenerator = new MarkdownHelpTextGenerator();
-            Generate(root, root.Name);
+            Generate(root, root.Name!);
 
             using (var writer = new StreamWriter(Path.Combine(OutputDir, "command-reference.md"), false))
             {

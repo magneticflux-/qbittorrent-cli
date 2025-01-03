@@ -26,7 +26,7 @@ namespace QBittorrent.CommandLineInterface.Services
 
         public IList<SiteCredentials> Credentials { get; set; } = new List<SiteCredentials>();
 
-        public ProxySettings Proxy { get; set; }
+        public ProxySettings? Proxy { get; set; }
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
@@ -58,7 +58,7 @@ namespace QBittorrent.CommandLineInterface.Services
             [JsonConverter(typeof(EncryptConverter))]
             public string Password { get; set; }
 
-            public string Domain { get; set; }
+            public string? Domain { get; set; }
 
             public NetworkCredential ToCredential()
             {

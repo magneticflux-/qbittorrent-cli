@@ -67,6 +67,9 @@ namespace QBittorrent.CommandLineInterface.Commands
                         case TorrentLogSeverity.Critical:
                             console.WriteColored("[Critical]", critical.fg, critical.bg);
                             break;
+                        case TorrentLogSeverity.All:
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
 
                     var time = timestampToDateTimeOffset(entry.Timestamp).ToString("s").Replace("T", " ");
@@ -84,8 +87,8 @@ namespace QBittorrent.CommandLineInterface.Commands
                     colorSet = fallback;
                 }
 
-                var bg = colorSet?.GetEffectiveBackground() ?? fallback.GetEffectiveBackground();
-                var fg = colorSet?.GetEffectiveForeground() ?? fallback.GetEffectiveForeground();
+                var bg = colorSet.GetEffectiveBackground();
+                var fg = colorSet.GetEffectiveForeground();
                 return (bg, fg);
             }
         }

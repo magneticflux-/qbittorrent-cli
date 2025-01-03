@@ -14,9 +14,9 @@ namespace QBittorrent.CommandLineInterface
     public class Pager : IDisposable
     {
         private readonly TextWriter _fallbackWriter;
-        private readonly Lazy<Process> _less;
+        private readonly Lazy<Process?> _less;
         private bool _disposed;
-        private string _prompt = "Use arrow keys to scroll\\. Press 'q' to exit\\.";
+        private string _prompt = @"Use arrow keys to scroll\. Press 'q' to exit\.";
 
         public Pager()
             : this(PhysicalConsole.Singleton)
@@ -28,7 +28,7 @@ namespace QBittorrent.CommandLineInterface
             if (console == null)
                 throw new ArgumentNullException(nameof(console));
             Enabled = !console.IsOutputRedirected && PagerExists();
-            _less = new Lazy<Process>(CreateWriter);
+            _less = new Lazy<Process?>(CreateWriter);
             _fallbackWriter = console.Out;
 
             bool PagerExists()
@@ -101,10 +101,10 @@ namespace QBittorrent.CommandLineInterface
         {
             if (!_less.IsValueCreated)
                 return;
-            _less.Value.Kill();
+            _less.Value?.Kill();
         }
 
-        private Process CreateWriter()
+        private Process? CreateWriter()
         {
             if (!Enabled)
                 return null;
@@ -145,7 +145,7 @@ namespace QBittorrent.CommandLineInterface
 
         private string GetStartupPath()
         {
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException();
         }
     }
 }

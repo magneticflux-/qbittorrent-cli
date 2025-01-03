@@ -11,11 +11,11 @@ namespace QBittorrent.CommandLineInterface.Services
 
         public bool BypassLocal { get; set; }
 
-        public IList<string> Bypass { get; set; }
+        public IList<string>? Bypass { get; set; }
 
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         [JsonConverter(typeof(EncryptConverter))]
-        public string Password { get; set; }
+        public string? Password { get; set; }
     }
 }

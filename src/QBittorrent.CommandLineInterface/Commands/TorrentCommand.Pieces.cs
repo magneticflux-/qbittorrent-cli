@@ -46,6 +46,8 @@ namespace QBittorrent.CommandLineInterface.Commands
                     case DisplayMode.Diagram:
                         await ShowDiagram();
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 async Task ShowFull()

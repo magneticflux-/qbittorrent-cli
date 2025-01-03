@@ -164,7 +164,7 @@ namespace QBittorrent.CommandLineInterface.Commands
             protected override bool AllowAll => true;
 
             [Option("-f|--folder <FOLDER>", CommandOptionType.SingleValue)]
-            public string Folder { get; set; }
+            public string? Folder { get; set; }
 
             protected override Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
             {

@@ -27,10 +27,10 @@ namespace QBittorrent.CommandLineInterface.Commands
             public string Pattern { get; set; }
 
             [Option("-c|--category <NAME>", "The category to search in. If omitted all categories will be searched.", CommandOptionType.SingleValue)]
-            public string Category { get; set; }
+            public string? Category { get; set; }
 
             [Option("-p|--plugin <NAME>", PluginsOptionDescription, CommandOptionType.MultipleValue)]
-            public IList<string> Plugins { get; set; }
+            public IList<string>? Plugins { get; set; }
 
             [Option("-o|--offset <INT>", "The offset from the beginning.", CommandOptionType.SingleValue)]
             public int Offset { get; set; }
@@ -49,7 +49,7 @@ namespace QBittorrent.CommandLineInterface.Commands
             {
                 const int resultsPerRequest = 100;
                 var id = await client.StartSearchAsync(Pattern,
-                    Plugins ?? new[] {"enabled"},
+                    Plugins ?? ["enabled"],
                     Category ?? "all");
 
                 Console.CancelKeyPress += OnCancel;
@@ -59,7 +59,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 var limit = Math.Min(remaining, resultsPerRequest);
 
                 var pager = UsePager ? new Pager() : null;
-                var target = pager != null && pager.Enabled ? new TextRenderTarget(pager.Writer) : null;
+                var target = pager is {Enabled: true} ? new TextRenderTarget(pager.Writer) : null;
 
                 var index = offset + 1;
 
@@ -133,7 +133,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     }
                 }
 
-                async void OnCancel(object sender, ConsoleCancelEventArgs e)
+                async void OnCancel(object? sender, ConsoleCancelEventArgs e)
                 {
                     await client.StopSearchAsync(id);
                     Console.CancelKeyPress -= OnCancel;

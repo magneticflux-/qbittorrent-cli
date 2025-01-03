@@ -71,14 +71,12 @@ namespace QBittorrent.CommandLineInterface
                 else
                 {
                     var exception = ex;
-                    string prevMessage = null;
+                    string? prevMessage = null;
                     do
                     {
-                        if (exception.Message != prevMessage)
-                        {
-                            Console.Error.WriteLine(exception.Message);
-                            prevMessage = exception.Message;
-                        }
+                        if (exception.Message == prevMessage) continue;
+                        Console.Error.WriteLine(exception.Message);
+                        prevMessage = exception.Message;
                     } while ((exception = exception.InnerException) != null);
                 }
 
@@ -95,7 +93,7 @@ namespace QBittorrent.CommandLineInterface
                     : $"A newer version of qBittorrent is required for this command.{Environment.NewLine}API {apiVersion} must be supported.");
                 Console.ResetColor();
 
-                string GetQBittorrentVersion()
+                string? GetQBittorrentVersion()
                 {
                     if (apiVersion == new ApiVersion(2))
                         return "4.1";
@@ -154,7 +152,7 @@ namespace QBittorrent.CommandLineInterface
 
         private string GetVersion()
         {
-            var attr = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+            var attr = Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!;
             return attr.InformationalVersion;
         }
     }

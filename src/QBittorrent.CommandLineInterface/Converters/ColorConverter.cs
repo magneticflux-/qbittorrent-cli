@@ -6,7 +6,7 @@ namespace QBittorrent.CommandLineInterface.Converters
 {
     internal class ColorConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             if (value == null)
             {
@@ -17,15 +17,15 @@ namespace QBittorrent.CommandLineInterface.Converters
             writer.WriteValue(value.ToString());
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonToken.Null)
-                return null;
+            return reader.TokenType switch
+            {
+                JsonToken.Null => null,
+                JsonToken.String => new Color((string?)reader.Value),
+                _ => throw new JsonSerializationException($"Unexpected token {reader.TokenType}.")
+            };
 
-            if (reader.TokenType == JsonToken.String)
-                return new Color((string)reader.Value);
-
-            throw new JsonSerializationException($"Unexpected token {reader.TokenType}.");
         }
 
         public override bool CanConvert(Type objectType)

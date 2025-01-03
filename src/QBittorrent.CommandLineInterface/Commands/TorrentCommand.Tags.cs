@@ -38,7 +38,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 protected override void PrintTable(IEnumerable<string> tags)
                 {
-                    if (tags?.Any() == true)
+                    if (tags.Any())
                     {
                         var doc = new Document(
                                 new Grid

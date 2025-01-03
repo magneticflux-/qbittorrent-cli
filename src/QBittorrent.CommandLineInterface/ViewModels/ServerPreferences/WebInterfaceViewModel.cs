@@ -42,11 +42,11 @@ namespace QBittorrent.CommandLineInterface.ViewModels.ServerPreferences
 
         [Display(Name = "SSL Certificate Path")]
         [DisplayFormat(NullDisplayText = "n/a")]
-        public string WebUISslCertificatePath => _wrappedObject.WebUISslCertificatePath?.Replace('/', Path.DirectorySeparatorChar);
+        public string? WebUISslCertificatePath => _wrappedObject.WebUISslCertificatePath?.Replace('/', Path.DirectorySeparatorChar);
 
         [Display(Name = "SSL Key Path")]
         [DisplayFormat(NullDisplayText = "n/a")]
-        public string WebUISslKeyPath => _wrappedObject.WebUISslKeyPath?.Replace('/', Path.DirectorySeparatorChar);
+        public string? WebUISslKeyPath => _wrappedObject.WebUISslKeyPath?.Replace('/', Path.DirectorySeparatorChar);
 
         [Display(Name = "Alt. Web UI")]
         [DisplayFormat(NullDisplayText = "n/a")]

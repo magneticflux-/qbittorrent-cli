@@ -16,17 +16,17 @@ namespace QBittorrent.CommandLineInterface.Commands
         {
             protected static void PrintLimit(IConsole console, long? limit)
             {
-                if (limit == null || limit < 0)
+                switch (limit)
                 {
-                    console.WriteLineColored("n/a", ColorScheme.Current.Normal);
-                }
-                else if (limit == 0)
-                {
-                    console.WriteLineColored("unlimited", ColorScheme.Current.Normal);
-                }
-                else
-                {
-                    console.WriteLineColored($"{limit:N0} bytes/s", ColorScheme.Current.Normal);
+                    case null or < 0:
+                        console.WriteLineColored("n/a", ColorScheme.Current.Normal);
+                        break;
+                    case 0:
+                        console.WriteLineColored("unlimited", ColorScheme.Current.Normal);
+                        break;
+                    default:
+                        console.WriteLineColored($"{limit:N0} bytes/s", ColorScheme.Current.Normal);
+                        break;
                 }
             }
 

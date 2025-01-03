@@ -51,17 +51,17 @@ namespace QBittorrent.CommandLineInterface.Commands
             [Command(Description = "Shows the list of torrent peers.")]
             public class List : TorrentSpecificListCommandBase<PeerPartialInfoViewModel>
             {
-                private static readonly Dictionary<string, Func<object, object>> CustomFormatters;
+                private static readonly Dictionary<string, Func<object?, object?>>? CustomFormatters;
 
                 static List()
                 {
-                    CustomFormatters = new Dictionary<string, Func<object, object>>
+                    CustomFormatters = new Dictionary<string, Func<object?, object?>>
                     {
                         [nameof(PeerPartialInfoViewModel.Files)] = FormatFiles
                     };
                 }
 
-                protected override IReadOnlyDictionary<string, Func<object, object>> ListCustomFormatters => CustomFormatters;
+                protected override Dictionary<string, Func<object?, object?>>? ListCustomFormatters => CustomFormatters;
 
                 protected override async Task<int> OnExecuteTorrentSpecificAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                 {
@@ -69,7 +69,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     if (response == null)
                         return ExitCodes.Failure;
 
-                    var peers = response.PeersChanged?.Values ?? Enumerable.Empty<PeerPartialInfo>();
+                    var peers = response.PeersChanged?.Values ?? [];
 
                     Print(peers.Select(p => new PeerPartialInfoViewModel(p)));
 
@@ -124,55 +124,31 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 private string FormatData(long? amount)
                 {
-                    if (amount == null)
+                    return amount switch
                     {
-                        return string.Empty;
-                    }
+                        null => string.Empty,
+                        < 1024 => $"{amount}  B",
+                        < 1024 * 1024 => $"{amount / 1024} kB",
+                        < 1024 * 1024 * 1024 => $"{amount / (1024 * 1024)} MB",
+                        _ => $"{amount / (1024 * 1024 * 1024)} GB"
+                    };
 
-                    if (amount < 1024)
-                    {
-                        return $"{amount}  B";
-                    }
-
-                    if (amount < 1024 * 1024)
-                    {
-                        return $"{amount / 1024} kB";
-                    }
-
-                    if (amount < 1024 * 1024 * 1024)
-                    {
-                        return $"{amount / (1024 * 1024)} MB";
-                    }
-
-                    return $"{amount / (1024 * 1024 * 1024)} GB";
                 }
 
                 private string FormatSpeed(int? speed)
                 {
-                    if (speed == null)
+                    return speed switch
                     {
-                        return string.Empty;
-                    }
+                        null => string.Empty,
+                        < 1024 => $"{speed}  B/s",
+                        < 1024 * 1024 => $"{speed / 1024} kB/s",
+                        < 1024 * 1024 * 1024 => $"{speed / (1024 * 1024)} MB/s",
+                        _ => $"{speed / (1024 * 1024 * 1024)} GB/s"
+                    };
 
-                    if (speed < 1024)
-                    {
-                        return $"{speed}  B/s";
-                    }
-
-                    if (speed < 1024 * 1024)
-                    {
-                        return $"{speed / 1024} kB/s";
-                    }
-
-                    if (speed < 1024 * 1024 * 1024)
-                    {
-                        return $"{speed / (1024 * 1024)} MB/s";
-                    }
-
-                    return $"{speed / (1024 * 1024 * 1024)} GB/s";
                 }
 
-                private static object FormatFiles(object list)
+                private static string FormatFiles(object? list)
                 {
                     if (list is not IReadOnlyList<string> files)
                         return string.Empty;

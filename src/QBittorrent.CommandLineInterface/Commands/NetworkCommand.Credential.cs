@@ -63,17 +63,17 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 [Option("-a|--auth-type <AUTH_TYPE>", "Authentication type", CommandOptionType.SingleValue)]
                 [Required]
-                public NetworkSettings.AuthType? AuthType { get; set; }
+                public NetworkSettings.AuthType AuthType { get; set; }
 
                 [Option("-u|--username <USERNAME>", "Username", CommandOptionType.SingleValue)]
                 [Required]
                 public string Username { get; set; }
 
                 [Option("-p|--password <PASSWORD>", "Password", CommandOptionType.SingleValue)]
-                public string Password { get; set; }
+                public string? Password { get; set; }
 
                 [Option("-d|--domain <DOMAIN>", "Domain", CommandOptionType.SingleValue)]
-                public string Domain { get; set; }
+                public string? Domain { get; set; }
 
                 public int OnExecute(CommandLineApplication app, IConsole console)
                 {
@@ -85,7 +85,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         cred = new NetworkSettings.SiteCredentials
                         {
                             Url = Url,
-                            AuthType = AuthType.Value
+                            AuthType = AuthType
                         };
                         networkSettings.Credentials.Add(cred);
                     }
@@ -100,7 +100,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     string GetPassword()
                     {
                         return console.IsInputRedirected
-                            ? console.In.ReadLine()
+                            ? console.In.ReadLine()!
                             : Prompt.GetPassword("Please, enter your network password: ");
                     }
                 }

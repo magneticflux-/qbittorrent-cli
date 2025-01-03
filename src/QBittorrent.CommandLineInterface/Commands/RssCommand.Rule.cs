@@ -30,45 +30,41 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 [Option("-i|--contains <STRING>", "The substring that the torrent name must contain.",
                     CommandOptionType.SingleValue)]
-                public string MustContain { get; set; }
+                public string? MustContain { get; set; }
 
                 [Option("-x|--not-contains <STRING>", "The substring that the torrent name must not contain",
                     CommandOptionType.SingleValue)]
-                public string MustNotContain { get; set; }
+                public string? MustNotContain { get; set; }
 
                 [Option("-f|--episode-filter", "Episode filter definition, e.g. \"1x01-;\".",
                     CommandOptionType.SingleValue)]
-                public string EpisodeFilter { get; set; }
+                public string? EpisodeFilter { get; set; }
 
                 [Option("-E|--prev-matched-episode <ID>",
                     "The episode ID already matched by smart filter. Can be specified multiple times.",
                     CommandOptionType.MultipleValue)]
-                public string[] PreviouslyMatchedEpisodes { get; set; }
+                public string[]? PreviouslyMatchedEpisodes { get; set; }
 
                 [Option("-u|--feed-url <URL>",
                     "The feed URL the rule applied to. Can be specified multiple times.",
                     CommandOptionType.MultipleValue)]
-                public Uri[] AffectedFeeds { get; set; }
+                public Uri[]? AffectedFeeds { get; set; }
 
                 [Option("-c|--category <CATEGORY>", "Assign category to the torrent.", CommandOptionType.SingleValue)]
-                public string Category { get; set; }
+                public string? Category { get; set; }
 
-                [Option("-s|--save-path <PATH>")] public string SavePath { get; set; }
+                [Option("-s|--save-path <PATH>")]
+                public string? SavePath { get; set; }
 
                 protected bool? ConvertPauseState(RssRulePauseState? state)
                 {
-                    switch (state)
+                    return state switch
                     {
-                        case null:
-                        case RssRulePauseState.Auto:
-                            return null;
-                        case RssRulePauseState.False:
-                            return false;
-                        case RssRulePauseState.True:
-                            return true;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(state), state, null);
-                    }
+                        null or RssRulePauseState.Auto => null,
+                        RssRulePauseState.False => false,
+                        RssRulePauseState.True => true,
+                        _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+                    };
                 }
             }
 
@@ -190,7 +186,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     {
                         if (value != null)
                         {
-                            rule.GetType().GetProperty(propertyName).SetValue(rule, value);
+                            rule.GetType().GetProperty(propertyName)!.SetValue(rule, value);
                         }
                     }
                 }
@@ -231,18 +227,18 @@ namespace QBittorrent.CommandLineInterface.Commands
             [Command(Description = "Shows RSS automatic downloading rule.", ExtendedHelpText = FormatHelpText + ExperimentalHelpText)]
             public class List : ListCommandBase<RssRuleViewModel>
             {
-                private static readonly Dictionary<string, Func<object, object>> CustomFormatters;
+                private static readonly IReadOnlyDictionary<string, Func<object?, object?>> CustomFormatters;
 
                 static List()
                 {
-                    CustomFormatters = new Dictionary<string, Func<object, object>>
+                    CustomFormatters = new Dictionary<string, Func<object?, object?>>
                     {
                         [nameof(RssRuleViewModel.AffectedFeeds)] = FormatAffectedFeeds,
                         [nameof(RssRuleViewModel.PreviouslyMatchedEpisodes)] = FormatPreviouslyMatchedEpisodes
                     };
                 }
 
-                protected override IReadOnlyDictionary<string, Func<object, object>> ListCustomFormatters => CustomFormatters;
+                protected override IReadOnlyDictionary<string, Func<object?, object?>> ListCustomFormatters => CustomFormatters;
 
                 protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                 {
@@ -277,20 +273,20 @@ namespace QBittorrent.CommandLineInterface.Commands
                     ConsoleRenderer.RenderDocument(doc);
                 }
 
-                private static object FormatAffectedFeeds(object obj)
+                private static Alba.CsConsoleFormat.List? FormatAffectedFeeds(object? obj)
                 {
-                    if (!(obj is IReadOnlyList<Uri> feeds))
+                    if (obj is not IReadOnlyList<Uri?> feeds)
                         return null;
 
-                    return new Alba.CsConsoleFormat.List(feeds.Where(f => f != null).Select(f => f.AbsoluteUri))
+                    return new Alba.CsConsoleFormat.List(from f in feeds where f is not null select f.AbsoluteUri)
                     {
                         IndexFormat = string.Empty
                     };
                 }
 
-                private static object FormatPreviouslyMatchedEpisodes(object obj)
+                private static Alba.CsConsoleFormat.List? FormatPreviouslyMatchedEpisodes(object? obj)
                 {
-                    if (!(obj is IReadOnlyList<string> episodes))
+                    if (obj is not IReadOnlyList<string> episodes)
                         return null;
 
                     return new Alba.CsConsoleFormat.List(episodes.Where(e => !string.IsNullOrEmpty(e)));

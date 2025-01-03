@@ -38,8 +38,8 @@ namespace QBittorrent.CommandLineInterface.Commands
                 [Option("-w|--bypass-whitelist <BOOL>", "Bypass authentication on whitelist", CommandOptionType.SingleValue, Inherited = false)]
                 public bool? BypassAuthenticationSubnetWhitelistEnabled { get; set; }
 
-                protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters =>
-                    new Dictionary<string, Func<object, object>>
+                protected override IReadOnlyDictionary<string, Func<object?, object?>> CustomFormatters =>
+                    new Dictionary<string, Func<object?, object?>>
                     {
                         [nameof(AuthenticationViewModel.BypassAuthenticationSubnetWhitelist)] =
                             value => value is IList<string> list
@@ -52,7 +52,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     if (AskForServerPassword)
                     {
                         WebUIPassword = console.IsInputRedirected
-                            ? console.In.ReadLine()
+                            ? console.In.ReadLine()!
                             : Prompt.GetPassword("Please, enter your web interface password: ");
                     }
 
@@ -83,9 +83,8 @@ namespace QBittorrent.CommandLineInterface.Commands
                             var modified = false;
                             foreach (var network in Networks.Select(IPNetwork.Parse))
                             {
-                                if (!currentNetworks.Contains(network))
+                                if (currentNetworks.Add(network))
                                 {
-                                    currentNetworks.Add(network);
                                     modified = true;
                                 }
                             }
@@ -142,7 +141,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     {
                         protected override async Task<int> OnExecuteAuthenticatedAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                         {
-                            var prefs = new Preferences {BypassAuthenticationSubnetWhitelist = new string[0]};
+                            var prefs = new Preferences {BypassAuthenticationSubnetWhitelist = Array.Empty<string>()};
                             await client.SetPreferencesAsync(prefs);
                             return ExitCodes.Success;
                         }

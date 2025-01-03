@@ -30,14 +30,10 @@ namespace QBittorrent.CommandLineInterface.Commands
         public partial class Settings : ClientRootCommandBase
         {
             [AttributeUsage(AttributeTargets.Property)]
-            private class NoAutoSetAttribute : Attribute
-            {
-            }
+            private class NoAutoSetAttribute : Attribute;
 
             [AttributeUsage(AttributeTargets.Property)]
-            private class IgnoreAttribute : Attribute
-            {
-            }
+            private class IgnoreAttribute : Attribute;
 
             [AttributeUsage(AttributeTargets.Property)]
             private class MinApiVersionAttribute : Attribute
@@ -113,12 +109,12 @@ namespace QBittorrent.CommandLineInterface.Commands
                         await WarnIfNotSupported(client, console, maxVersion, message, true, values);
                     }
 
-                    if (props.Any())
+                    if (props.Count != 0)
                     {
                         var prefs = new Preferences();
                         foreach (var prop in props.Where(p => p.autoSet))
                         {
-                            typeof(Preferences).GetProperty(prop.Name).SetValue(prefs, prop.value);
+                            typeof(Preferences).GetProperty(prop.Name)!.SetValue(prefs, prop.value);
                         }
 
                         CustomFillPreferences(prefs);
@@ -137,7 +133,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     ApiVersion version,
                     string message,
                     bool max,
-                    params object[] properties)
+                    params object?[]? properties)
                 {
                     if (properties == null || properties.All(p => p == null))
                         return;
@@ -159,7 +155,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                 protected virtual void PrintPreferences(QBittorrentClient client, Preferences preferences)
                 {
-                    var vm = (T)Activator.CreateInstance(typeof(T), preferences);
+                    var vm = (T)Activator.CreateInstance(typeof(T), preferences)!;
                     Print(vm);
                 }
             }
@@ -244,7 +240,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     if (AskForSmtpPassword)
                     {
                         MailNotificationPassword = console.IsInputRedirected
-                            ? console.In.ReadLine()
+                            ? console.In.ReadLine()!
                             : Prompt.GetPassword("Please, enter your SMTP server password: ");
                     }
 
@@ -284,8 +280,8 @@ namespace QBittorrent.CommandLineInterface.Commands
                 [Range(-1, int.MaxValue)]
                 public int? MaxUploadsPerTorrent { get; set; }
 
-                protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters =>
-                    new Dictionary<string, Func<object, object>>
+                protected override IReadOnlyDictionary<string, Func<object?, object?>> CustomFormatters =>
+                    new Dictionary<string, Func<object?, object?>>
                     {
                         [nameof(ConnectionViewModel.BittorrentProtocol)] =
                             value => Client.BittorrentProtocol.Both.Equals(value) ? "TCP and uTP" : null
@@ -315,7 +311,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 public string ProxyUsername { get; set; }
 
                 [Option("-p|--proxy-password <PASSWORD>", "Proxy password", CommandOptionType.SingleValue)]
-                public string ProxyPassword { get; set; }
+                public string? ProxyPassword { get; set; }
 
                 [Option("-P|--ask-proxy-password", "Ask user to enter proxy password.", CommandOptionType.NoValue)]
                 [NoAutoSet]
@@ -341,8 +337,8 @@ namespace QBittorrent.CommandLineInterface.Commands
                 [MinApiVersion("2.9.1", "\"proxy-general\" option requires qBittorrent 4.6.0 or later.")]
                 public bool? ProxyMisc { get; set; }
 
-                protected override IReadOnlyDictionary<string, Func<object, object>> CustomFormatters =>
-                    new Dictionary<string, Func<object, object>>
+                protected override IReadOnlyDictionary<string, Func<object?, object?>> CustomFormatters =>
+                    new Dictionary<string, Func<object?, object?>>
                     {
                         [nameof(ProxyViewModel.ProxyType)] =
                             value => value != null ? Enum.IsDefined(typeof(ProxyType), value) ? value.ToString() : "None" : null
@@ -419,7 +415,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 
                     return base.Prepare(client, app, console);
 
-                    (int? hour, int? minute) TryParseTime(string input)
+                    (int? hour, int? minute) TryParseTime(string? input)
                     {
                         const DateTimeStyles styles =
                             DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite | DateTimeStyles.NoCurrentDateDefault;
@@ -427,8 +423,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                         if (input == null)
                             return (null, null);
 
-                        DateTime dt;
-                        if (DateTime.TryParseExact(input, "t", CultureInfo.CurrentCulture, styles, out dt))
+                        if (DateTime.TryParseExact(input, "t", CultureInfo.CurrentCulture, styles, out var dt))
                             return (dt.TimeOfDay.Hours, dt.TimeOfDay.Minutes);
                         if (DateTime.TryParseExact(input, "t", CultureInfo.InvariantCulture, styles, out dt))
                             return (dt.TimeOfDay.Hours, dt.TimeOfDay.Minutes);
@@ -550,7 +545,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                     if (AskForDynamicDnsPassword)
                     {
                         DynamicDnsPassword = console.IsInputRedirected
-                            ? console.In.ReadLine()
+                            ? console.In.ReadLine()!
                             : Prompt.GetPassword("Please, enter your dynamic DNS password: ");
                     }
 

@@ -2,7 +2,7 @@
 
 namespace QBittorrent.CommandLineInterface.ColorSchemes
 {
-    public struct Color
+    public readonly struct Color
     {
         private readonly ColorType _type;
         private readonly ConsoleColor? _consoleColor;
@@ -39,7 +39,7 @@ namespace QBittorrent.CommandLineInterface.ColorSchemes
             _consoleColor = null;
         }
 
-        public Color(string value)
+        public Color(string? value)
         {
             switch (value)
             {
@@ -62,18 +62,13 @@ namespace QBittorrent.CommandLineInterface.ColorSchemes
 
         public static implicit operator ConsoleColor(Color value)
         {
-            switch (value._type)
+            return value._type switch
             {
-                case ColorType.Console:
-                    // ReSharper disable once PossibleInvalidOperationException
-                    return value._consoleColor.Value;
-                case ColorType.SystemBackground:
-                    return EnumHelper.IsDefined(Console.BackgroundColor) ? Console.BackgroundColor : System.ConsoleColor.Black;
-                case ColorType.SystemForeground:
-                    return EnumHelper.IsDefined(Console.ForegroundColor) ? Console.ForegroundColor : System.ConsoleColor.White;
-                default:
-                    throw new ArgumentException();
-            }
+                ColorType.Console => value._consoleColor!.Value,
+                ColorType.SystemBackground => EnumHelper.IsDefined(Console.BackgroundColor) ? Console.BackgroundColor : System.ConsoleColor.Black,
+                ColorType.SystemForeground => EnumHelper.IsDefined(Console.ForegroundColor) ? Console.ForegroundColor : System.ConsoleColor.White,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         public ConsoleColor? ConsoleColor => _consoleColor;
@@ -83,14 +78,15 @@ namespace QBittorrent.CommandLineInterface.ColorSchemes
             switch (_type)
             {
                 case ColorType.Console:
-                    var colorName = _consoleColor.ToString();
+                    var colorName = _consoleColor.ToString()!;
                     if (colorName.StartsWith("Dark"))
-                        return "dark-" + colorName.Substring(4).ToLowerInvariant();
+                        return "dark-" + colorName[4..].ToLowerInvariant();
                     return colorName.ToLowerInvariant();
                 case ColorType.SystemBackground:
                     return "system-bg";
                 case ColorType.SystemForeground:
                     return "system-fg";
+                case ColorType.Invalid:
                 default:
                     return "<invalid>";
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using McMaster.Extensions.CommandLineUtils;
 using QBittorrent.CommandLineInterface.Formats;
 
 namespace QBittorrent.CommandLineInterface.Commands
@@ -13,8 +14,9 @@ namespace QBittorrent.CommandLineInterface.Commands
         {
             _formatter = new ListFormatter<T>(PrintTable, PrintList);
         }
-
-        public virtual string Format { get; set; }
+        
+        [Option("-F|--format <LIST_FORMAT>", "Output format: table|list|csv|json", CommandOptionType.SingleValue)]
+        public virtual string? Format { get; set; }
 
         protected virtual Dictionary<string, Func<object?, object?>>? ListCustomFormatters => null;
 

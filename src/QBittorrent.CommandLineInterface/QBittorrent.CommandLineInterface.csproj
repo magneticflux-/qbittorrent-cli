@@ -44,7 +44,7 @@
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.5.0"/>
         <PackageReference Include="CsvHelper" Version="33.0.1"/>
         <PackageReference Include="IPNetwork2" Version="3.0.667"/>
-        <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1"/>
+        <ProjectReference Include="..\..\..\CommandLineUtils\src\CommandLineUtils\McMaster.Extensions.CommandLineUtils.csproj"/>
         <PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="NJsonSchema" Version="11.1.0"/>

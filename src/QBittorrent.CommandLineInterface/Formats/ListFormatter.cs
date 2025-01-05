@@ -11,7 +11,7 @@ namespace QBittorrent.CommandLineInterface.Formats
         private readonly Action<IEnumerable<T>>? _printList = printList;
         private readonly Action<IEnumerable<T>>? _printTable = printTable;
 
-        public void PrintFormat(IEnumerable<T> data, string formatOptions, bool preferList = false)
+        public void PrintFormat(IEnumerable<T> data, string? formatOptions, bool preferList = false)
         {
             var (format, options) = FormatParser.Parse(formatOptions);
             if (string.IsNullOrWhiteSpace(format))

@@ -74,7 +74,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 protected override bool AllowAll => true;
 
                 [Argument(0, "<HASH|ALL>", "Full or partial torrent hash, or keyword ALL to add tags to all torrents.")]
-                public override string Hash { get; set; }
+                public override required string Hash { get; set; }
 
                 [Argument(1, "<TAG_1 TAG_2 ... TAG_N>", "The tags to add.")]
                 [Required]
@@ -95,7 +95,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 protected override bool AllowAll => true;
 
                 [Argument(0, "<HASH|ALL>", "Full or partial torrent hash, or keyword ALL to remove tags from all torrents.")]
-                public override string Hash { get; set; }
+                public override required string Hash { get; set; }
 
                 [Argument(1, "<TAG_1 TAG_2 ... TAG_N>", "The tags to remove.")]
                 [Required]
@@ -116,7 +116,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 protected override bool AllowAll => true;
 
                 [Argument(0, "<HASH|ALL>", "Full or partial torrent hash, or keyword ALL to clear tags from all torrents.")]
-                public override string Hash { get; set; }
+                public override required string Hash { get; set; }
 
                 protected override async Task<int> OnExecuteTorrentSpecificAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                 {

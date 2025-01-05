@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using QBittorrent.Client;
@@ -10,9 +11,10 @@ namespace QBittorrent.CommandLineInterface.Commands
 {
     public abstract class TorrentSpecificCommandBase : AuthenticatedCommandBase
     {
+        [Argument(0, "<HASH>", "Full or partial torrent hash")]
         [Required]
         [StringLength(40, MinimumLength = 1)]
-        public virtual string Hash { get; set; }
+        public virtual required string Hash { get; set; }
 
         protected virtual bool AllowAll => false;
 

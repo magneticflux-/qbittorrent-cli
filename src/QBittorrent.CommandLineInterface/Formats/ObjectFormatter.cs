@@ -33,7 +33,7 @@ namespace QBittorrent.CommandLineInterface.Formats
                 select (new CommandOption(option.Template, option.OptionType.GetValueOrDefault()).LongName, prop));
         }
 
-        public void PrintFormat(in T data, string formatOptions)
+        public void PrintFormat(in T data, string? formatOptions)
         {
             var (format, options) = FormatParser.Parse(formatOptions);
             if (string.IsNullOrWhiteSpace(format))

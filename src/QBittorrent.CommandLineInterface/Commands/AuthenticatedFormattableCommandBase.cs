@@ -21,7 +21,7 @@ namespace QBittorrent.CommandLineInterface.Commands
         protected virtual IReadOnlyDictionary<string, Func<object?, object?>>? CustomFormatters => null;
 
         [Option("-F|--format <OBJECT_FORMAT>", "Output format: list|csv|json|property", CommandOptionType.SingleValue)]
-        public string Format { get; set; }
+        public string? Format { get; set; }
 
         protected virtual PropertyInfo FindProperty(string name)
         {

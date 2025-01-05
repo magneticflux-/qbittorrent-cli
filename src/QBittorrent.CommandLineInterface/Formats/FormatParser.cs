@@ -6,7 +6,7 @@ namespace QBittorrent.CommandLineInterface.Formats
 {
     public static class FormatParser
     {
-        public static (string? format, IReadOnlyDictionary<string, string?>? options) Parse(string formatString)
+        public static (string? format, IReadOnlyDictionary<string, string?>? options) Parse(string? formatString)
         {
             if (string.IsNullOrWhiteSpace(formatString))
                 return (null, null);

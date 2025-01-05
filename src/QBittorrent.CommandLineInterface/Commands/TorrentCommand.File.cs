@@ -77,7 +77,7 @@ namespace QBittorrent.CommandLineInterface.Commands
                 public string Value { get; set; }
 
                 [Option("-F|--format <LIST_FORMAT>", "Output format: plain|table|list|csv|json", CommandOptionType.SingleValue)]
-                public override string Format { get; set; }
+                public override string? Format { get; set; }
 
                 protected override async Task<int> OnExecuteTorrentSpecificAsync(QBittorrentClient client, CommandLineApplication app, IConsole console)
                 {

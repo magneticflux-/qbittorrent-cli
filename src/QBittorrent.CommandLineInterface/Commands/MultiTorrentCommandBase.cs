@@ -11,6 +11,7 @@ namespace QBittorrent.CommandLineInterface.Commands
 {
     public abstract class MultiTorrentCommandBase : AuthenticatedCommandBase
     {
+        [Argument(0, "<HASH_1 HASH_2 ... HASH_N>", "Full or partial torrent hashes.")]
         [Required]
         [StringLength(40, MinimumLength = 1)]
         public virtual IList<string> Hashes { get; set; }
